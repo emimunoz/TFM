@@ -8,13 +8,14 @@ install.packages("data.table")
 install.packages("janitor")
 install.packages("DataExplorer")
 install.packages("lubridate")
+install.packages("ggplot2")
 
 library(tidyverse)
 library(data.table)
 library(janitor)
 library(DataExplorer)
 library(lubridate)
-
+library(ggplot2)
 
 ### Importación de datos: ---------------
 
@@ -46,7 +47,7 @@ accidentes <- accidentes %>% select(-c(Codi_districte, Codi_barri, Codi_carrer, 
 str(accidentes)
 
 # Renombrar columnas de "accidentes":
-accidentes <- accidentes_2016 %>% 
+accidentes <- accidentes %>% 
   rename(
     Num_exp=Numero_expedient, Distrito=Nom_districte, Barrio=Nom_barri, Calle=Nom_carrer, Cod_postal=Num_postal, 
     Dia_semana=Descripcio_dia_setmana, Año=Any, Mes=Mes_any, Dia=Dia_mes, Hora=Hora_dia, 
@@ -114,12 +115,29 @@ accidentes <- accidentes[!(accidentes$Num_exp=="2018S009504" & accidentes$Causa_
 # Unir DataFrames
 # Ya que tenemos todos los DataFrames con valores únicos 
 
-### Creación de la columna fecha y hora ---------------------------------------------------------------
+### Creación de la columna fecha y hora, transformación a TimeSeries ---------------------------------------------------------------
 # Como los datos relacionados con la fecha y hora están en columnas separadas, vamos a unificarlos en una única columna y pasarlos a formato date.
 accidentes <- accidentes %>% 
-  mutate(Fecha_hora = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, accidentes$Hora, sep="-"))
-parse_date_time(accidentes$Fecha_hora, orders="ymdh")
+  mutate(Fecha_hora = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, sep="-"))
+parse_date_time(accidentes$Fecha_hora, orders="ymd")
+
+accidentes <- accidentes %>% 
+  arrange(accidentes$Fecha_hora) %>% 
+  mutate(num_acc = 1)
+
+View(accidentes)
 
 
+accidentes3 <- accidentes2 %>% 
+  group_by(accidentes2$Fecha_hora) %>% 
+  summarize(cuenta = sum(cuenta))
 
+View(accidentes3)
+ts(accidentes3)
+##################################
+# Convertimos el DataFrame a una TimeSeries para poder analizar los datos y predecir:
+time <- ts(accidentes, start=c(2016,1))
+ts(souvenir, frequency=12, start=c(1987,1))
+plot.ts(accidentes)
 
+View(time)

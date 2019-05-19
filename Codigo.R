@@ -9,6 +9,7 @@ install.packages("janitor")
 install.packages("DataExplorer")
 install.packages("lubridate")
 install.packages("ggplot2")
+install.packages("shiny")
 
 library(tidyverse)
 library(data.table)
@@ -16,6 +17,7 @@ library(janitor)
 library(DataExplorer)
 library(lubridate)
 library(ggplot2)
+library(shiny)
 
 ### Importación de datos: ---------------
 
@@ -112,8 +114,37 @@ accidentes <- accidentes[!(accidentes$Num_exp=="2018S003156" & accidentes$Causa_
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S005992" & accidentes$Causa_acc=="Cruzar fuera del paso de peatones"),]
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S009504" & accidentes$Causa_acc=="Otros"),]
 
-# Unir DataFrames
-# Ya que tenemos todos los DataFrames con valores únicos 
+
+### Visualización -----------------------------------
+
+# Accidentes por día 
+
+ggplot(accidentes, aes(accidentes$Año, fill=accidentes$Dia_semana)) + geom_bar(position="stack")
+
+
+
+
+##### GGMAP ----------------------------------
+
+library(ggmap)
+register_google(key="AIzaSyBpaHmIvfP4aH20S3EiRYzlwNjw2shFudY")
+barcelona <-  geocode('Barcelona', source = "google")
+
+?register_google
+
+
+
+###### SHINY --------------------------------
+
+ui <- fluidPage()
+
+server <-  function(input, output) {}
+
+shinyApp(ui - ui, server - server)
+
+
+
+
 
 ### Creación de la columna fecha y hora, transformación a TimeSeries ---------------------------------------------------------------
 # Como los datos relacionados con la fecha y hora están en columnas separadas, vamos a unificarlos en una única columna y pasarlos a formato date.
@@ -128,12 +159,15 @@ accidentes <- accidentes %>%
 View(accidentes)
 
 
-accidentes3 <- accidentes2 %>% 
-  group_by(accidentes2$Fecha_hora) %>% 
-  summarize(cuenta = sum(cuenta))
+accidentes3 <- accidentes %>% 
+  group_by(accidentes$Fecha_hora) %>% 
+  summarize(num_acc = sum(num_acc))
 
 View(accidentes3)
-ts(accidentes3)
+
+ts1 <-  ts(accidentes3$num_acc, start=c(2016,01, end=c(2018,12)))
+plot(ts1)
+View(ts1)
 ##################################
 # Convertimos el DataFrame a una TimeSeries para poder analizar los datos y predecir:
 time <- ts(accidentes, start=c(2016,1))

@@ -10,6 +10,8 @@ install.packages("DataExplorer")
 install.packages("lubridate")
 install.packages("ggplot2")
 install.packages("shiny")
+install.packages("forecast")
+install.packages("prophet")
 
 library(tidyverse)
 library(data.table)
@@ -18,6 +20,8 @@ library(DataExplorer)
 library(lubridate)
 library(ggplot2)
 library(shiny)
+library(forecast)
+library(prophet)
 
 ### Importación de datos: ---------------
 
@@ -77,13 +81,13 @@ plot_missing(accidentes)
 
 ### Comprobación de duplicados: --------------
 # En el DataSet de 2016 todos los valores son únicos
-length(unique(accidentes_2016$Num_exp))
+length(unique(accidentes_2016$Numero_expedient))
 
 # En el DataSet de 2017 tenemos 4 duplicados
-length(unique(accidentes_2017$Num_exp))
+length(unique(accidentes_2017$Numero_expedient))
 
 # En el DataSet de 2018 tenemos 10 duplicados
-length(unique(accidentes_2018$Num_exp))
+length(unique(accidentes_2018$Numero_expedient))
 
 # En el DataSet de 2017 nos vamos a quedar con los valores que indican una causa para el accidente
 # Comprobamos valores duplicados:
@@ -114,23 +118,12 @@ accidentes <- accidentes[!(accidentes$Num_exp=="2018S003156" & accidentes$Causa_
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S005992" & accidentes$Causa_acc=="Cruzar fuera del paso de peatones"),]
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S009504" & accidentes$Causa_acc=="Otros"),]
 
+# Eliminamos los DataFrames que no vamos a utilizar más:
+rm("accidentes_2016","accidentes_2017","accidentes_2018","accidentes_2018_dupl","accidentes_2017_dupl")
 
-### Visualización -----------------------------------
+# Exportar CSV para trabajar con los datos en Tableau:
+write_csv2(accidentes, file("accidentes_barcelona.csv"))
 
-# Accidentes por día 
-
-ggplot(accidentes, aes(accidentes$Año, fill=accidentes$Dia_semana)) + geom_bar(position="stack")
-
-
-
-
-##### GGMAP ----------------------------------
-
-library(ggmap)
-register_google(key="AIzaSyBpaHmIvfP4aH20S3EiRYzlwNjw2shFudY")
-barcelona <-  geocode('Barcelona', source = "google")
-
-?register_google
 
 
 
@@ -146,32 +139,158 @@ shinyApp(ui - ui, server - server)
 
 
 
-### Creación de la columna fecha y hora, transformación a TimeSeries ---------------------------------------------------------------
+### Creación de la columna fecha y hora, 
 # Como los datos relacionados con la fecha y hora están en columnas separadas, vamos a unificarlos en una única columna y pasarlos a formato date.
-accidentes <- accidentes %>% 
-  mutate(Fecha_hora = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, sep="-"))
-parse_date_time(accidentes$Fecha_hora, orders="ymd")
+accidentes_con_fecha <- accidentes %>% 
+  mutate(Fecha = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, sep="-"))
+accidentes_con_fecha$Fecha <-  as.Date(accidentes_con_fecha$Fecha,"%Y-%m-%d")
 
-accidentes <- accidentes %>% 
-  arrange(accidentes$Fecha_hora) %>% 
+
+str(accidentes_con_fecha)
+View(accidentes_con_fecha)
+
+# Creamos una columna con el valor 1 para realizar después un sumatorio de accidentes por día.
+accidentes_con_fecha <- accidentes_con_fecha %>% 
+  arrange(accidentes_con_fecha$Fecha) %>% 
   mutate(num_acc = 1)
 
-View(accidentes)
+View(accidentes_con_fecha)
 
-
-accidentes3 <- accidentes %>% 
-  group_by(accidentes$Fecha_hora) %>% 
+# Este será el DataFrame con el que realizaremos el Forecasting, ya que tiene únicamente 2 columnas con la cifra de accidentes por día.
+accidentes_por_dia <- accidentes_con_fecha %>% 
+  group_by(Fecha) %>% 
   summarize(num_acc = sum(num_acc))
 
-View(accidentes3)
+View(accidentes_por_dia)
 
-ts1 <-  ts(accidentes3$num_acc, start=c(2016,01, end=c(2018,12)))
-plot(ts1)
-View(ts1)
-##################################
-# Convertimos el DataFrame a una TimeSeries para poder analizar los datos y predecir:
-time <- ts(accidentes, start=c(2016,1))
-ts(souvenir, frequency=12, start=c(1987,1))
-plot.ts(accidentes)
 
-View(time)
+## Forecasting con Prophet: ----------------------------------------
+accidentes_por_dia_2 <- mutate(accidentes_por_dia, ds = Fecha, y = num_acc)
+accidentes_por_dia_2 <- column_to_rownames(accidentes_por_dia_2, var = "Fecha")
+
+# Create ggplot object 
+g <- ggplot(data = accidentes_por_dia, aes(x = accidentes_por_dia$Fecha, y = accidentes_por_dia$num_acc)) +
+  geom_line(color='#334f8d') + 
+  scale_y_continuous(name = 'Accidentes al día', labels = c("0", "5", "10", "15", "20","25","30","35", "40","45","50","55","60"), 
+                     breaks=c(0,5,10,15,20,25,30,35,40,45,50,55,60)) + 
+  geom_vline(aes(xintercept=as.numeric(as.Date("2017-01-01"))), color='#334f8d', linetype="dashed") +
+  geom_vline(aes(xintercept=as.numeric(as.Date("2018-01-01"))), color='#334f8d', linetype="dashed") +
+  scale_x_date(date_labels = "%b %Y", date_breaks = "4 months") + 
+  theme_bw() 
+
+# Plot 
+g + theme(panel.border = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          axis.title.x=element_blank())
+
+
+
+lam = BoxCox.lambda(accidentes_por_dia_2$num_acc, method = "loglik")
+accidentes_por_dia_2$y = BoxCox(accidentes_por_dia_2$num_acc, lam)
+accidentes_por_dia_2.m <- melt(accidentes_por_dia_2, measure.vars=c("num_acc","y"))
+
+
+str(accidentes_por_dia_2)
+
+
+
+
+
+
+
+vnames <-list(
+  'value' = 'Untransformed',
+  'y' = 'Box-Cox Transformed')
+
+vlabeller <- function(variable,value){
+  return(vnames[value])
+}
+
+options(repr.plot.width=7, repr.plot.height=4) # set plot size
+
+g1 <- ggplot(accidentes_por_dia_2.m, aes(x=ds, y=value, group=variable)) + 
+  geom_line(color='#334f8d') + 
+  facet_wrap(~ variable, nrow=2, labeller =  vlabeller,scales="free_y") + #using scales="free_y" allows the y-axis to vary while keeping x-axis constant among plots+
+  scale_x_date(date_labels = "%b %Y", date_breaks = "5 months") +
+  theme_bw()
+
+#Plot
+g1 + theme(panel.border = element_blank(),
+           axis.ticks = element_blank(),
+           panel.grid.major = element_blank(), 
+           panel.grid.minor = element_blank(),
+           axis.title.x=element_blank(),
+           axis.title.y=element_blank(),
+           strip.background = element_blank())  
+
+
+
+
+
+
+
+### Forecasting
+
+m <- prophet(accidentes_por_dia_2)
+future <- make_future_dataframe(m, periods = 365)
+forecast <- predict(m, future)
+tail(forecast)
+plot(m, forecast)
+
+prophet_plot_components(m, forecast)
+
+
+
+
+
+# Invertir transformación BoxCox
+inverse_forecast <- forecast
+inverse_forecast <- column_to_rownames(inverse_forecast, var = "ds")
+inverse_forecast$yhat_untransformed = InvBoxCox(forecast$yhat, lam)
+
+
+
+indx <- inverse_forecast$yhat_untransformed[rownames(inverse_forecast) > max(rownames(df))]
+date <- forecast$ds[forecast$ds > max(rownames(df))]
+
+f <- data.frame(date, indx)
+head(f)
+
+
+
+
+
+
+
+
+
+#Create ggplot object
+g <- ggplot() + 
+  geom_line(data=accidentes_por_dia_2, aes(x=ds, y= num_acc), color='#334f8d') +
+  geom_line(data=f, aes(x=date, y= indx), color='#334f8d', alpha=0.3) + 
+  scale_y_continuous(name = 'Orders', labels = c("0", "100,000", "200,000", "300,000", "400,000","500,000","600,000","700,000", "800,000"), 
+                     breaks=c(0,100000,200000,300000,400000,500000,600000,700000, 800000)) + 
+  scale_x_date(date_labels = "%b %Y", date_breaks = "5 months" ) +
+  theme_bw()  
+
+#Plot
+g + theme(panel.border = element_blank(),
+          axis.ticks = element_blank(),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          axis.title.x=element_blank())
+
+
+
+
+
+
+
+
+accidentes_ymas <- accidentes %>% group_by(month=floor_date(date, "month")) %>%
+  summarize(num_acc=sum(num_acc))
+
+
+

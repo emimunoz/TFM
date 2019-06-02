@@ -16,14 +16,13 @@ library(janitor)
 library(DataExplorer)
 library(lubridate)
 
-### Importación de datos: ---------------
+# Importación de datos:
 
-accidentes_2016 <- fread("/Users/emi/Documents/Data_Science/K_School/TFM/Accidentes/2016_accidents_gu_bcn.csv")
-accidentes_2017 <- fread("/Users/emi/Documents/Data_Science/K_School/TFM/Accidentes/2017_accidents_gu_bcn.csv")
-accidentes_2018 <- fread("/Users/emi/Documents/Data_Science/K_School/TFM/Accidentes/2018_accidents_gu_bcn.csv") 
+accidentes_2016 <- read.csv("https://dl.dropbox.com/s/mu5toz8vbe5rluv/2016_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2017 <- read.csv("https://dl.dropbox.com/s/jvq2oey5drhx7fv/2017_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2018 <- read.csv("https://dl.dropbox.com/s/i4syy7ccvawkylj/2018_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-# Transformación a Tibble
-
+# Transformación a Tibble:
 accidentes_2016 <-  as_tibble(accidentes_2016)
 accidentes_2017 <-  as_tibble(accidentes_2017) 
 accidentes_2018 <-  as_tibble(accidentes_2018) 
@@ -33,10 +32,10 @@ accidentes_2018 <-  as_tibble(accidentes_2018)
 # único DF:
 accidentes <- rbind(accidentes_2016, accidentes_2017, accidentes_2018)
 
-### Borrado de columnas innecesarias:
+# Borrado de columnas innecesarias:
 # Hay algunas columnas que no van a ser necesarias para el estudio, 
 # por lo que lo mejor es deshacerse de ellas cuanto antes.
-accidentes <- accidentes %>% select(-c(Codi_districte, Codi_barri, Codi_carrer, Dia_setmana, Nom_mes, Descripcio_tipus_dia))
+accidentes <- accidentes %>% select(-c(Codi_districte, Codi_barri, Codi_carrer, Dia_setmana, Nom_mes, Descripcio_tipus_dia, Coordenada_UTM_X, Coordenada_UTM_Y, Longitud, Latitud, Num_postal))
 
 
 ### Traducción de los valores al español: ------------------------------------------------------------------------------------------
@@ -48,7 +47,7 @@ str(accidentes)
 # Renombrar columnas de "accidentes":
 accidentes <- accidentes %>% 
   rename(
-    Num_exp=Numero_expedient, Distrito=Nom_districte, Barrio=Nom_barri, Calle=Nom_carrer, Cod_postal=Num_postal, 
+    Num_exp=Numero_expedient, Distrito=Nom_districte, Barrio=Nom_barri, Calle=Nom_carrer, 
     Dia_semana=Descripcio_dia_setmana, Año=Any, Mes=Mes_any, Dia=Dia_mes, Hora=Hora_dia, 
     Momento_dia=Descripcio_torn, Causa_acc=Descripcio_causa_vianant, Num_muertos=Numero_morts, Num_les_leves=Numero_lesionats_lleus,
     Num_les_graves=Numero_lesionats_greus, Num_victimas=Numero_victimes, Num_vehiculos_impl=Numero_vehicles_implicats)
@@ -122,5 +121,5 @@ accidentes <- accidentes %>%
 accidentes$Fecha <-  as.Date(accidentes$Fecha,"%Y-%m-%d")
 
 
-# Exportar CSV para trabajar con los datos en Tableau:
+# Exportar CSV para trabajar con los datos en Tableau y realizar el Forecasting:
 write_csv2(accidentes, file("accidentes_barcelona.csv"))

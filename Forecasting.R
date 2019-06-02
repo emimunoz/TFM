@@ -16,25 +16,26 @@ library(prophet)
 
 ### Importación de datos: ---------------
 
-accidentes <- fread("/Users/emi/Documents/Data_Science/K_School/TFM/accidentes_barcelona.csv") 
+accidentes <- read.csv("https://dl.dropbox.com/s/n9l6tl5i01h6lle/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
+# Al importar se ha perdido la clase fecha para la columna Fecha.
+accidentes$Fecha <- as.Date(accidentes$Fecha)
 
 # Creamos una columna con el valor 1 para realizar después un sumatorio de accidentes por día.
 accidentes <- accidentes %>% 
   arrange(accidentes$Fecha) %>% 
   mutate(num_acc = 1)
 
-View(accidentes)
-
-# Este será el DataFrame con el que realizaremos el Forecasting, ya que tiene únicamente 2 columnas con la cifra de accidentes por día.
+# Este será el DataFrame con el que realizaremos el Forecasting, ya que tiene únicamente 2 columnas con la fecha y cifra de accidentes por día.
 accidentes_por_dia <- accidentes %>% 
   group_by(Fecha) %>% 
   summarize(num_acc = sum(num_acc))
 
-## Forecasting con Prophet: ----------------------------------------
+### FORECASTING CON PROPHET ----------------------------------------------------------------------------------------------------------------------------
 accidentes_por_dia_2 <- mutate(accidentes_por_dia, ds = Fecha, y = num_acc)
 accidentes_por_dia_2 <- column_to_rownames(accidentes_por_dia_2, var = "Fecha")
 
-# Create ggplot object 
+# Visualización de la serie temporal con datos diarios de accidentes: 
 g <- ggplot(data = accidentes_por_dia, aes(x = accidentes_por_dia$Fecha, y = accidentes_por_dia$num_acc)) +
   geom_line(color='#334f8d') + 
   scale_y_continuous(name = 'Accidentes al día', labels = c("0", "5", "10", "15", "20","25","30","35", "40","45","50","55","60"), 
@@ -44,28 +45,15 @@ g <- ggplot(data = accidentes_por_dia, aes(x = accidentes_por_dia$Fecha, y = acc
   scale_x_date(date_labels = "%b %Y", date_breaks = "4 months") + 
   theme_bw() 
 
-# Plot 
-g + theme(panel.border = element_blank(),
-          axis.ticks = element_blank(),
-          panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(),
-          axis.title.x=element_blank())
+g + theme(panel.border = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.x=element_blank())
 
 
-
-lam = BoxCox.lambda(accidentes_por_dia_2$num_acc, method = "loglik")
-accidentes_por_dia_2$y = BoxCox(accidentes_por_dia_2$num_acc, lam)
+# Transformación Box-Cox y coeficiente lambda (λ):
+lambda = BoxCox.lambda(accidentes_por_dia_2$num_acc, method = "loglik")
+accidentes_por_dia_2$y = BoxCox(accidentes_por_dia_2$num_acc, lambda)
 accidentes_por_dia_2.m <- melt(accidentes_por_dia_2, measure.vars=c("num_acc","y"))
 
-
-str(accidentes_por_dia_2)
-
-
-
-
-
-
-
+# Visualización del cambio que aplicaría en nuestra serie temporal al transformación BoxCox:
 vnames <-list(
   'value' = 'Untransformed',
   'y' = 'Box-Cox Transformed')

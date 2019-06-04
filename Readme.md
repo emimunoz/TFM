@@ -13,5 +13,29 @@ Los [datos](https://opendata-ajuntament.barcelona.cat/data/es/dataset/accidents-
 
 Para facilitar el proceso de corrección los he subido a una carpeta en Dropbox y se descargan directamente desde el código en R. Los cambios que he realizado en el dataset ha sido retirar columnas que no iba a utilizar, traducir los nombres de columnas y valores que estaban en catalán al español y la búsqueda de valores duplicados. 
 
-No hay muchos valores duplicados en el dataset, pero los pocos que hay el motivo de estar duplicados es que a la hora de clasificar la causa del accidente 
+No hay muchos valores duplicados en el dataset, pero los pocos que hay, el motivo de estar duplicados es a la hora de clasificar la causa del accidente. En algunas ocasiones se indica como causa “Otros” y una causa más particular, por lo que me he quedado con los valores que ofrecen más información sobre la causa del accidente.
+
+Ya para finalizar con la preparación previa de los datos he creado una columna con la fecha en la que  sucedió cada accidente. Exportando al final el archivo CSV con el que se trabajará después para realizar el Forecasting y para la visualización en Tableau.
+
+## Forecasting
+Para el estudio de la predicción de accidentes he decidido utilizar Prophet porque es una librería que permite realizar predicciones de series temporales de una manera fácil y fiable. Especialmente pensada para trabajar con datos con periodicidad diaria y al menos un año de datos. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.
+
+Lo primero será crear una columna con el valor ‘1’ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por cada día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna ‘ds’ con la fecha y otra ‘y’ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:
+
+*
+
+Intenté realizar una transformación Box-Cox utilizando la función _Box-Cox.lambda()_ para tratar de averiguar el valor de lambda más adecuado para dicha transformación. Pero al representar ambos valores obtenidos en una visualización no se conseguía observar ninguna variación en la serie temporal. Por lo que decidí realizar directamente el forecasting con el dataset de accidentes preparado para Prophet, obteniendo la siguiente representación de la predicción:
+
+*
+
+Con la función _prophet_plot_components()_ es posible visualizar una representación general de la tendencia de los datos de accidentes en la ciudad de Barcelona:
+
+Se puede comprobar que la tendencia es que el número de accidentes continúen disminuyendo después de alcanzar un valor máximo en el año 2017, alcanzando un pico de 28 accidentes diarios. Para el año 2020 se estima que baje a 26. No es un cambio considerable pero es una relativamente buena noticia que el número de accidentes disminuyan.
+
+La distribución semanal de accidentes se verá más claramente después en una visualización de Tableau. Sin embargo, en la distribución anual, llama la atención comprobar cómo en el mes de Agosto disminuye considerablemente el número de accidentes. Algo que habría que estudiar a ver si realmente es un fallo de los datos o no, ya que en teoría Barcelona es una ciudad muy turística y en dicho mes tendría un gran número de visitantes extranjeros. 
+
+## Visualización con Tableau
+
+
+
 

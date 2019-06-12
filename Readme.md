@@ -10,7 +10,7 @@ Lo he realizado todo en lenguaje R ya que ha sido el lenguaje con el que más c�
 ## Desarrollo
 Los [datos](https://opendata-ajuntament.barcelona.cat/data/es/dataset/accidents-gu-bcn) los he descargado desde la web [Open Data BCN](https://opendata-ajuntament.barcelona.cat/es/) que pone a disposición el Ayuntamiento de Barcelona. En concreto he querido trabajar con los datos de los **últimos 3 años: 2016, 2017 y 2018**. El trabajo de limpieza y preparación de los mismos ha sido bastante sencillo, ya que apenas he tenido que realizar modificaciones para poder trabajar con ellos en la predicción y después con Tableau. 
 
-![](https://imgur.com/nmkSPur)
+![alt text] (https://imgur.com/nmkSPur)
 
 Para facilitar el proceso de corrección los he subido a una carpeta en Dropbox y se descargan directamente desde el código en R. Los cambios que he realizado en el dataset ha sido retirar columnas que no iba a utilizar, traducir los nombres de columnas y valores que estaban en catalán al español y la búsqueda de valores duplicados. 
 

@@ -2,8 +2,7 @@
 ### Emiliano Muñoz Torres
 ### Forecasting con Prophet
 
-### Librerías requeridas: ---------------
-
+### Librerías requeridas: 
 install.packages("tidyverse")
 install.packages("data.table")
 install.packages("forecast")
@@ -13,7 +12,6 @@ library(tidyverse)
 library(data.table)
 library(forecast)
 library(prophet)
-library(lubridate)
 
 ##Importación de datos: 
 accidentes <- read.csv("https://dl.dropbox.com/s/n9l6tl5i01h6lle/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
@@ -32,7 +30,7 @@ accidentes_dia <- accidentes %>%
   summarize(num_acc = sum(num_acc))
 
 ### FORECASTING CON PROPHET ----------------------------------------------------------------------------------------------------------------------------
-accidentes_dia_prophet <- mutate(accidentes_por_dia, ds = Fecha, y = num_acc)
+accidentes_dia_prophet <- mutate(accidentes_dia, ds = Fecha, y = num_acc)
 accidentes_dia_prophet <- column_to_rownames(accidentes_dia_prophet, var = "Fecha")
 
 # Visualización de la serie temporal con datos diarios de accidentes: 
@@ -47,7 +45,6 @@ g + theme(panel.border = element_blank(), axis.ticks = element_blank(), panel.gr
 
 
 ### Forecasting
-
 m <- prophet(accidentes_dia_prophet)
 future <- make_future_dataframe(m, periods = 365)
 forecast <- predict(m, future)

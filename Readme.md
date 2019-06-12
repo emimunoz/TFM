@@ -21,15 +21,15 @@ Para el estudio de la predicción de accidentes he decidido utilizar **Prophet**
 
 Lo primero será crear una columna con el valor _‘1’_ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna _‘ds’_ con la fecha y otra _‘y’_ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:
 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Rplot1.jpeg)
+![](https://i.imgur.com/LnM6w2F.jpg)
 
 Intenté realizar una **transformación Box-Cox** utilizando la función _Box-Cox.lambda()_ para tratar de averiguar el valor de lambda más adecuado para dicha transformación. Pero al representar ambos valores obtenidos en una visualización no se observaba ninguna variación en la serie temporal. Por lo que decidí realizar directamente el forecasting con el dataset de accidentes preparado para Prophet, obteniendo la siguiente representación de la predicción:
 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Rplot2.jpeg)
+![](https://i.imgur.com/gVpGYn6.jpg)
 
 Con la función _prophet_plot_components()_ es posible visualizar una **visualización general de la tendencia** de los datos de accidentes en la ciudad de Barcelona:
 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Rplot3.jpeg)
+![](https://i.imgur.com/0jBu3DU.jpg)
 
 Se puede comprobar que la tendencia es que el número de accidentes continúen **disminuyendo después de alcanzar un valor máximo en el año 2017**,  con una media de 28 accidentes diarios. Para el año 2020 se estima que baje a 26. No es un cambio considerable pero es una relativamente buena noticia que el número de accidentes disminuya.
 
@@ -39,7 +39,7 @@ La distribución semanal de accidentes se verá más claramente después en una 
 ### Accidentes al año
 En el primer gráfico se puede ver que la tendencia es que cada año que pasa, **el número de accidentes es inferior al del año anterior**.  Lo cual coincide con lo estimado por Prophet que indicaba que la tendencia era a que disminuyera el número de accidentes. También es bastante representativo comprobar cómo claramente el mes con menos accidentes siempre es agosto. Una ciudad tan turística como es Barcelona, este mes será de los más fuertes, pero aún así hay menos accidentes. Por lo que podríamos suponer que los principales responsables de los accidentes en Barcelona, son personas en horario laboral. Ya que en agosto es cuando más gente se va de vacaciones. 
 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Captura%20de%20pantalla%202019-06-10%20a%20las%2020.56.12.jpg)
+![](https://i.imgur.com/EXC99bU.jpg)
 
 
 
@@ -47,11 +47,11 @@ En el primer gráfico se puede ver que la tendencia es que cada año que pasa, *
 
 Aquí también podemos ver que durante la tarde y la mañana es la hora del día en la que más accidentes suele haber. El distrito de **Eixample es el que más accidentes acumula** ya que es de las zonas más céntricas de Barcelona, por lo que es por donde más gente circula y es obvio que sucederán más accidentes. El distrito de Sant Martí es junto al de Sants-Montjuic el que más accidentes por la noche. En Sant Martí es donde podemos encontrar una de las zonas de fiesta de Barcelona con discotecas como Razzmatazz. Por lo que tiene cierta lógica que acumule más accidentes. 
 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Captura%20de%20pantalla%202019-06-10%20a%20las%2020.55.54.jpg)
+![](https://i.imgur.com/nmkSPur.jpg)
 
 
 
 ### Accidentes a lo largo de la semana
 
 Por último, tenemos un gráfico donde se ven los accidentes en cada día de la semana y el número de accidentes mortales de media para cada día. Este gráfico vuelve a confirmar lo que sospechábamos en los gráficos previos: **la mayoría de accidentes ocurren durante jornada laboral.** Los sábados y domingos el número de accidentes disminuye considerablemente. Los días con más accidentes mortales son el lunes y viernes, siendo este último el día con más accidentes en general también. 
-![](Trabajo%20Final%20de%20M%C3%A1ster%20Predicci%C3%B3n%20de%20accidentes%20en%20la%20ciudad%20de%20Barcelona/Captura%20de%20pantalla%202019-06-10%20a%20las%2020.56.28.jpg)
+![](https://i.imgur.com/SjjlKSr.jpg)

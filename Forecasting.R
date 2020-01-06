@@ -54,5 +54,5 @@ forecast <- predict(m, future)
 tail(forecast)
 plot(m, forecast)
 
-# Ploteamos varios gráficos que muestran la predicción para el año 2019-2020, además de los accidentes por día de la semana y meses del año
+# Ploteamos varios gráficos que muestran una visualización de la tendencia de los datos para el año 2019-2020, además de los accidentes por día de la semana y meses del año
 prophet_plot_components(m, forecast)

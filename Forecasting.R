@@ -13,10 +13,10 @@ library(data.table)
 library(forecast)
 library(prophet)
 
-##Importación de datos: 
+##Importamos los datos que ya limpiamos y procesamos previamente desde Dropbox: 
 accidentes <- read.csv("https://dl.dropbox.com/s/n9l6tl5i01h6lle/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
-# Al importar se ha perdido la clase fecha para la columna Fecha.
+# Al importar se ha perdido la clase 'fecha' para la columna del dataset llamada Fecha.
 accidentes$Fecha <- as.Date(accidentes$Fecha)
 
 # Creamos una columna con el valor 1 para realizar después un sumatorio de accidentes por día.
@@ -29,7 +29,11 @@ accidentes_dia <- accidentes %>%
   group_by(Fecha) %>% 
   summarize(num_acc = sum(num_acc))
 
-### FORECASTING CON PROPHET ----------------------------------------------------------------------------------------------------------------------------
+
+
+
+### FORECASTING CON PROPHET 
+
 accidentes_dia_prophet <- mutate(accidentes_dia, ds = Fecha, y = num_acc)
 accidentes_dia_prophet <- column_to_rownames(accidentes_dia_prophet, var = "Fecha")
 
@@ -43,26 +47,12 @@ g <- ggplot(data = accidentes_dia, aes(x = accidentes_dia$Fecha, y = accidentes_
 
 g + theme(panel.border = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.x=element_blank())
 
-
-### Forecasting
+# Realizamos el forecasting con Prophet:
 m <- prophet(accidentes_dia_prophet)
 future <- make_future_dataframe(m, periods = 365)
 forecast <- predict(m, future)
 tail(forecast)
 plot(m, forecast)
 
+# Ploteamos varios gráficos que muestran la predicción para el año 2019-2020, además de los accidentes por día de la semana y meses del año
 prophet_plot_components(m, forecast)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 ### TRABAJO FINAL DE MÁSTER
 ### Emiliano Muñoz Torres
-### Preparación y limpieza de datos
+### Preparación y limpieza de los datos
 
 ### Librerías requeridas: 
 install.packages("tidyverse")
@@ -15,30 +15,35 @@ library(janitor)
 library(DataExplorer)
 library(lubridate)
 
-# Importación de datos:
+
+
+
+# Importación de datos desde un archivo en Dropbox:
 accidentes_2016 <- read.csv("https://dl.dropbox.com/s/mu5toz8vbe5rluv/2016_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 accidentes_2017 <- read.csv("https://dl.dropbox.com/s/jvq2oey5drhx7fv/2017_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 accidentes_2018 <- read.csv("https://dl.dropbox.com/s/i4syy7ccvawkylj/2018_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 
-# Transformación a Tibble:
+# Transformación de los datos a Tibble:
 accidentes_2016 <-  as_tibble(accidentes_2016)
 accidentes_2017 <-  as_tibble(accidentes_2017) 
 accidentes_2018 <-  as_tibble(accidentes_2018) 
 
 # Unir DataFrames
-# Como el valor de la primera columna es el identificador de cada caso de accidente, podremos unificar los 3 DataFrames en un 
-# único DF:
+# Como el valor de la primera columna es el identificador de cada caso de accidente,   
+# podremos unificar los 3 DataFrames en un único DF:
 accidentes <- rbind(accidentes_2016, accidentes_2017, accidentes_2018)
 
 # Borrado de columnas innecesarias:
 # Hay algunas columnas que no van a ser necesarias para el estudio, 
-# por lo que lo mejor es deshacerse de ellas cuanto antes.
+# por lo que se eliminarán del dataset.
 accidentes <- accidentes %>% select(-c(Codi_districte, Codi_barri, Codi_carrer, Dia_setmana, Nom_mes, Descripcio_tipus_dia, Coordenada_UTM_X, Coordenada_UTM_Y, Longitud, Latitud, Num_postal))
+
+
 
 ### Traducción de los valores al español:
 
 # Antes de comenzar a trabajar sobre los duplicados vamos a traducir al español los valores
-# para tener una mejor comprensión del DataSet, ya que está todo en catalán.
+# para tener una mejor comprensión del dataset, ya que está todo en catalán.
 str(accidentes)
 
 # Renombrar columnas de "accidentes":
@@ -62,22 +67,29 @@ accidentes$Causa_acc <- recode(accidentes$Causa_acc, "No és causa del  vianant"
 accidentes$Distrito <- recode(accidentes$Distrito, "Desconegut"="Desconocido")
 accidentes$Barrio <- recode(accidentes$Barrio, "Desconegut"="Desconocido")
 
+
+
+
 ### Comprobación de missing values: 
+
 # Sorprendentemente no tenemos missing values, los policías de Barcelona 
 # hacen muy bien su trabajo a la hora de rellenar la información de accidentes.
 plot_missing(accidentes)
 
+
+
 ### Comprobación de duplicados: 
-# En el DataSet de 2016 todos los valores son únicos
+
+# En el dataset de 2016 todos los valores son únicos
 length(unique(accidentes_2016$Numero_expedient))
 
-# En el DataSet de 2017 tenemos 4 duplicados
+# En el dataset de 2017 tenemos 4 duplicados
 length(unique(accidentes_2017$Numero_expedient))
 
-# En el DataSet de 2018 tenemos 10 duplicados
+# En el dataset de 2018 tenemos 10 duplicados
 length(unique(accidentes_2018$Numero_expedient))
 
-# En el DataSet de 2017 nos vamos a quedar con los valores que indican una causa para el accidente
+# En el dataset de 2017 nos vamos a quedar con los valores que indican una causa para el accidente
 # Comprobamos valores duplicados:
 accidentes$Num_exp[duplicated(accidentes$Num_exp)]
 accidentes_2017_dupl <- accidentes %>% 
@@ -109,11 +121,14 @@ accidentes <- accidentes[!(accidentes$Num_exp=="2018S009504" & accidentes$Causa_
 # Eliminamos los DataFrames que no vamos a utilizar más:
 rm("accidentes_2016","accidentes_2017","accidentes_2018","accidentes_2018_dupl","accidentes_2017_dupl")
 
-### Creación de la columna fecha y hora, 
+
+
+### Creación de la columna fecha y hora
+
 # Como los datos relacionados con la fecha y hora están en columnas separadas, vamos a unificarlos en una única columna y pasarlos a formato date.
 accidentes <- accidentes %>% 
   mutate(Fecha = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, sep="-"))
 accidentes$Fecha <-  as.Date(accidentes$Fecha,"%Y-%m-%d")
 
-# Exportar CSV para trabajar con los datos en Tableau y realizar el Forecasting:
+# Exportamos CSV para trabajar con los datos en Tableau y realizar el Forecasting:
 write_csv2(accidentes, file("accidentes_barcelona.csv"))

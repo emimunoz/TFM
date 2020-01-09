@@ -31,7 +31,7 @@ Con la función _prophet_plot_components()_ es posible visualizar una **visualiz
 
 ![](https://i.imgur.com/0jBu3DU.jpg)
 
-Se puede comprobar que la tendencia es que el número de accidentes continúen **disminuyendo después de haber alcanzado un valor máximo en el año 2017**,  con una media de 28 accidentes diarios (a falta de tener los datos de años previos). Para el año 2020 se estima que baje a 26. No es un cambio considerable pero es una relativamente buena noticia que el número de accidentes tienda a disminuir.
+Se puede comprobar que la tendencia es que el número de accidentes continúen **disminuyendo después de haber alcanzado un valor máximo en el año 2017**,  con una media de 28 accidentes diarios. Para el año 2020 se estima que baje a 26. No es un cambio considerable pero es una relativamente buena noticia que el número de accidentes tienda a disminuir.
 
 La distribución semanal de accidentes se verá más claramente después en una visualización de Tableau. Sin embargo, en la distribución anual, llama la atención comprobar cómo en el mes de Agosto disminuye considerablemente el número de accidentes. Algo que habría que estudiar a ver si realmente es un fallo de los datos o no, ya que en teoría Barcelona es una ciudad muy turística y en dicho mes tendría un gran número de visitantes extranjeros. 
 

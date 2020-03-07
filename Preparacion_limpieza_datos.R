@@ -41,8 +41,7 @@ str(accidentes_2016)
 ### con los datasets de 2014 y 2015 para finalmente unirlos en un único dataset.
 accidentes_16_17_18 <- rbind(accidentes_2016, accidentes_2017, accidentes_2018)
 
-accidentes_16_17_18 <- accidentes_16_17_18 %>% 
-  rename(Num_exp=Numero_expedient, Cod_distrito=Codi_districte, Distrito=Nom_districte, Cod_barrio=Codi_barri, Barrio=Nom_barri, Cod_calle=Codi_carrer, Calle=Nom_carrer, 
+accidentes_16_17_18 <- accidentes_16_17_18 %>% rename(Num_exp=Numero_expedient, Cod_distrito=Codi_districte, Distrito=Nom_districte, Cod_barrio=Codi_barri, Barrio=Nom_barri, Cod_calle=Codi_carrer, Calle=Nom_carrer, 
     Dia_semana=Descripcio_dia_setmana, Dia_semana_reducido=Dia_setmana, Tipo_dia=Descripcio_tipus_dia, Año=Any, Mes=Mes_any, Dia=Dia_mes, Hora=Hora_dia, 
     Momento_dia=Descripcio_torn, Causa_acc=Descripcio_causa_vianant, Num_muertos=Numero_morts, Num_leves=Numero_lesionats_lleus,
     Num_graves=Numero_lesionats_greus, Num_victimas=Numero_victimes, Num_vehiculos_impl=Numero_vehicles_implicats)
@@ -136,4 +135,24 @@ accidentes <- accidentes[!(accidentes$Num_exp=="2018S002968" & accidentes$Causa_
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S003156" & accidentes$Causa_acc=="Otros"),]
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S005992" & accidentes$Causa_acc=="Cruzar fuera del paso de peatones"),]
 accidentes <- accidentes[!(accidentes$Num_exp=="2018S009504" & accidentes$Causa_acc=="Otros"),]
+
+# Eliminamos los DataFrames que no vamos a utilizar más:
+rm("accidentes_2014","accidentes_2015","accidentes_2016","accidentes_2017","accidentes_2018","accidentes_2018_dupl","accidentes_2017_dupl","accidentes_16_17_18")
+
+# Como los datos relacionados con la fecha y hora están en columnas separadas, vamos a unificarlos en una única columna y pasarlos a formato date.
+accidentes <- accidentes %>% 
+  mutate(Fecha = paste(accidentes$Año, accidentes$Mes, accidentes$Dia, sep="-"))
+accidentes$Fecha <-  as.Date(accidentes$Fecha,"%Y-%m-%d")
+ 
+
+
+########## ----- !!!! Exportación del dataset accidente para continuar con el trabajo más fácilmente cada día
+write_csv2(accidentes, file("accidentes_barcelona.csv"))
+accidentes <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
+
+
+
+
+
 

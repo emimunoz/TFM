@@ -1,4 +1,6 @@
-#------------------------ FORECASTING
+### FORECASTING --------------------------------------------------------------
+###---------------------------------------------------------------------------
+
 
 ### Librerías requeridas: 
 install.packages("tidyverse")
@@ -8,6 +10,8 @@ install.packages("DataExplorer")
 install.packages("lubridate")
 install.packages("plyr")
 install.packages("tseries")
+install.packages("forecast")
+install.packages("TSstudio")
 
 library(tidyverse)
 library(data.table)
@@ -16,6 +20,8 @@ library(DataExplorer)
 library(lubridate)
 library(plyr)
 library(tseries)
+library(forecast)
+library(TSstudio)
 
 ### CREACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
 
@@ -38,7 +44,6 @@ accidentes_sum_dia$Fecha <- NULL
 # Creamos la serie temporal con frecuencia diaria desde el día 1 de enero de 2014
 accidentes_ts <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
 plot(accidentes_ts)
-plot(acf(accidentes_ts))
 
 
 ### ANÁLISIS DE LA SERIE TEMPORAL ---------------------------------------------------------
@@ -54,7 +59,7 @@ adf.test(accidentes_ts) # Es una serie temporal estacionaria.
 # Extraemos la estacionalidad, tendencia y error de los componentes de la serie temporal para poder visualizarlos
 accidentes_descomp <- decompose(accidentes_ts, type = "additive")
 plot(accidentes_descomp)
-# Tendencia: Se comprueba que hay una tendencia que va entre 26.5 y 28.5 accidentes diarios, un cambio de un 7%.
+# Tendencia: Se comprueba que hay una ligera variación en la tendencia que va entre 26.5 y 28.5 accidentes diarios, un cambio de un 7%.
 # Estacionalidad: Hay una fuerte estacionalidad que se va repitiendo cada año con una forma muy similar al anterior.
 # Ruido: Tiene mucha amplitud ya que los valores varían entre 20 y -20 accidentes diarios.  
 
@@ -65,3 +70,21 @@ acf(accidentes_ts)
 pacf(accidentes_ts)
 
 
+
+
+### FORECASTING DE LA SERIE TEMPORAL ---------------------------------------------------------
+
+checkresiduals(arimaFit)
+autoplot(forecast(autoArimaFit))
+
+# Separamos la serie temporal completa en train y test para poder comprobar la eficacia del algoritmo
+split_accidentes <-  ts_split(ts.obj = accidentes_ts, sample.out=365)
+training <- split_accidentes$train
+test <- split_accidentes$test
+
+length(training) # 1461 valores
+length(test) # 365 valores
+
+### PREDICCIÓN CON ARIMA 
+# Como la serie temporal tiene estacionalidad, "forzamos" la detección de estacionalidad por parte del modelo ARIMA
+plot(forecast(auto.arima(ts(training, frequency = 365),D=1),h=365))

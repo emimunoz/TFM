@@ -12,6 +12,7 @@ install.packages("plyr")
 install.packages("tseries")
 install.packages("forecast")
 install.packages("TSstudio")
+install.packages("prophet")
 
 library(tidyverse)
 library(data.table)
@@ -22,6 +23,7 @@ library(plyr)
 library(tseries)
 library(forecast)
 library(TSstudio)
+library(prophet)
 
 ### CREACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
 
@@ -37,6 +39,9 @@ accidentes_1 <- accidentes_ds_completo %>%
 
 # Se suman los accidentes de cada día
 accidentes_sum_dia <- aggregate(accidentes_1["num_acc"], by=accidentes_1["Fecha"],sum)
+
+
+#---------------------------------
 
 # Quitamos la columna con la fecha para poder pasar a crear ya la serie temporal con todos los accidentes
 accidentes_sum_dia$Fecha <- NULL
@@ -87,4 +92,41 @@ length(test) # 365 valores
 
 ### PREDICCIÓN CON ARIMA 
 # Como la serie temporal tiene estacionalidad, "forzamos" la detección de estacionalidad por parte del modelo ARIMA
-plot(forecast(auto.arima(ts(training, frequency = 365),D=1),h=365))
+arima1 <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)
+checkresiduals(arima1)
+accuracy(arima1)
+
+
+
+## dm test para comparar el accuracy de 2 forecastings https://www.rdocumentation.org/packages/forecast/versions/8.12/topics/dm.test
+dm.test
+
+
+
+
+### FORECASTING CON PROPHET -------------------------------------------------------------
+
+# mirar efectos de añadir días de vacaciones https://facebook.github.io/prophet/docs/seasonality,_holiday_effects,_and_regressors.html
+# https://nextjournal.com/eric-brown/forecasting-with-prophet-part-3
+
+accidentes_prophet <- mutate(accidentes_sum_dia, ds = Fecha, y = num_acc)
+accidentes_prophet <- column_to_rownames(accidentes_prophet, var = "Fecha")
+
+m <- prophet(accidentes_prophet)
+future <- make_future_dataframe(m, periods = 365)
+forecast <- predict(m, future)
+tail(forecast)
+plot(m, forecast)
+
+
+
+
+
+
+accidentes_ts_prophet <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
+
+split_accidentes_prophet <-  ts_split(ts.obj = accidentes_ts_prophet, sample.out=365)
+training_prophet <- split_accidentes_prophet$train
+test_prophet <- split_accidentes_prophet$test
+
+

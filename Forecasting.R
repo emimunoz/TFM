@@ -112,13 +112,16 @@ dm.test
 accidentes_prophet <- mutate(accidentes_sum_dia, ds = Fecha, y = num_acc)
 accidentes_prophet <- column_to_rownames(accidentes_prophet, var = "Fecha")
 
-m <- prophet(accidentes_prophet)
-future <- make_future_dataframe(m, periods = 365)
+m <- prophet(accidentes_prophet, growth = "linear", yearly.seasonality = TRUE, holidays = holidays) 
+future <- make_future_dataframe(m, periods = 1060) # Predicción de número de accidentes para los próximos 4 años
 forecast <- predict(m, future)
+plot(m, forecast) + add_changepoints_to_plot(m) # En 2017 comienza el cambio de tendencia de bajada del número de accidentes diarios
+
 tail(forecast)
-plot(m, forecast)
 
+prophet_plot_components(m, forecast) # Gráfico de componentes de la serie temporal
 
+dyplot.prophet(m, forecast) # gráfico dinámico
 
 
 

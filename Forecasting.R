@@ -112,7 +112,7 @@ dm.test
 accidentes_prophet <- mutate(accidentes_sum_dia, ds = Fecha, y = num_acc)
 accidentes_prophet <- column_to_rownames(accidentes_prophet, var = "Fecha")
 
-m <- prophet(accidentes_prophet, growth = "linear", yearly.seasonality = TRUE, holidays = holidays) 
+m <- prophet(accidentes_prophet, growth = "linear", yearly.seasonality = TRUE) 
 future <- make_future_dataframe(m, periods = 1060) # Predicción de número de accidentes para los próximos 4 años
 forecast <- predict(m, future)
 plot(m, forecast) + add_changepoints_to_plot(m) # En 2017 comienza el cambio de tendencia de bajada del número de accidentes diarios
@@ -124,7 +124,19 @@ prophet_plot_components(m, forecast) # Gráfico de componentes de la serie tempo
 dyplot.prophet(m, forecast) # gráfico dinámico
 
 
+## CROSS VALIDATION PROHPET -----------------------------------------------------------------------------
 
+
+df.cv <- cross_validation(m, initial = 1095, period = 180, horizon = 365, units = 'days')
+df.p <- performance_metrics(df.cv)
+head(df.p)
+plot_cross_validation_metric(df.cv, metric = 'mae')
+
+
+
+
+
+## -------------------
 
 accidentes_ts_prophet <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
 

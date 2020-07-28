@@ -58,8 +58,10 @@ plot(accidentes_ts)
 #   H1: No estacionaria 
 kpss.test(accidentes_ts, null = "Trend") # 0.08934 > 0.05 -> No podemos rechazar H0, por lo que no hay evidencia de que la serie no sea estacionaria
 
-# Comprobamos la estacionalidad con un adf test:
+
+# Comprobamos la estacionariedad con un adf test:
 adf.test(accidentes_ts) # Es una serie temporal estacionaria.
+
 
 # Extraemos la estacionalidad, tendencia y error de los componentes de la serie temporal para poder visualizarlos
 accidentes_descomp <- decompose(accidentes_ts, type = "additive")
@@ -75,8 +77,6 @@ acf(accidentes_ts)
 pacf(accidentes_ts)
 
 
-
-
 ### FORECASTING DE LA SERIE TEMPORAL ---------------------------------------------------------
 
 checkresiduals(arimaFit)
@@ -90,13 +90,51 @@ test <- split_accidentes$test
 length(training) # 1461 valores
 length(test) # 365 valores
 
-### PREDICCIÓN CON ARIMA 
-# Como la serie temporal tiene estacionalidad, "forzamos" la detección de estacionalidad por parte del modelo ARIMA
-arima1 <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)
-checkresiduals(arima1)
-accuracy(arima1)
 
 
+### FORECASTING CON ARIMA 
+# 'arima_ses <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)' Intenté "forzar" la detección de estacionalidad por parte del modelo ARIMA, pero estaba muchísimo rato el PC 
+# pensando sin llegar nunca a dar ningún resultado.
+
+arima_acc <- auto.arima(training)
+checkresiduals(arima_acc)
+accuracy(arima_acc)
+autoplot(forecast(arima_acc))
+
+
+
+### FORECASTING CON ETS
+
+ets_acc <- ets(training) # Muestra aviso de que la estacionalidad será ignorada, ETS y ARIMA no son buenos métodos para series estacionales. 
+checkresiduals(ets_acc)
+accuracy(ets_acc)
+autoplot(forecast(ets_acc))
+
+### FORECASTING CON SNAIVE
+
+snaive_acc <- snaive(training)
+plot(snaive_acc)
+checkresiduals(snaive_acc)
+
+### FORECASTING CON HOLT WINTERS METHOD
+
+hwm_acc <- HoltWinters(training)
+
+### COMPARATIVA DE LOS MODELOS CON AUTO ARIMA, ETS, SNAIVE, 
+
+accuracy_arima <- arima_acc %>% forecast(h=365) %>% accuracy(test)
+accuracy_arima[,c("RMSE","MAE","MAPE","MASE")]
+
+accuracy_ets <- ets_acc %>% forecast(h=365) %>% accuracy(test)
+accuracy_ets[,c("RMSE","MAE","MAPE","MASE")]
+
+accuracy_snaive <- snaive_acc %>% forecast(h=365) %>% accuracy(test)
+accuracy_snaive[,c("RMSE","MAE","MAPE","MASE")]
+
+accuracy_hwm <- hwm_acc %>% forecast(h=365) %>% accuracy(test)
+accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
+
+accidentes_ts  %>%  auto.arima() %>% forecast(h=365)  %>% autoplot()
 
 ## dm test para comparar el accuracy de 2 forecastings https://www.rdocumentation.org/packages/forecast/versions/8.12/topics/dm.test
 dm.test

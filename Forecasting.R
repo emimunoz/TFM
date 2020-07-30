@@ -1,6 +1,8 @@
-### FORECASTING --------------------------------------------------------------
-###---------------------------------------------------------------------------
-
+### FORECASTING --------------------------------------------------------------------------------------
+### En este código se preparan los datos y se estudian las características de la serie para 
+### la realización de la predicción del número de accidentes utilizando los métodos:
+### Auto.ARIMA, ETS, SNAIVE, Holt  Winters y Prophet.
+### --------------------------------------------------------------------------------------------------
 
 ### Librerías requeridas: 
 install.packages("tidyverse")
@@ -25,7 +27,7 @@ library(forecast)
 library(TSstudio)
 library(prophet)
 
-### CREACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
+### PREPARACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
 
 accidentes_ds_completo <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
@@ -40,8 +42,8 @@ accidentes_1 <- accidentes_ds_completo %>%
 # Se suman los accidentes de cada día
 accidentes_sum_dia <- aggregate(accidentes_1["num_acc"], by=accidentes_1["Fecha"],sum)
 
-
-#---------------------------------
+# Se crea una copia de este dataset para utilizarlo con Prophet
+accidentes_prophet <- accidentes_sum_dia
 
 # Quitamos la columna con la fecha para poder pasar a crear ya la serie temporal con todos los accidentes
 accidentes_sum_dia$Fecha <- NULL
@@ -49,6 +51,9 @@ accidentes_sum_dia$Fecha <- NULL
 # Creamos la serie temporal con frecuencia diaria desde el día 1 de enero de 2014
 accidentes_ts <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
 plot(accidentes_ts)
+
+
+
 
 
 ### ANÁLISIS DE LA SERIE TEMPORAL ---------------------------------------------------------
@@ -77,10 +82,10 @@ acf(accidentes_ts)
 pacf(accidentes_ts)
 
 
-### FORECASTING DE LA SERIE TEMPORAL ---------------------------------------------------------
 
-checkresiduals(arimaFit)
-autoplot(forecast(autoArimaFit))
+
+
+### FORECASTING DE LA SERIE TEMPORAL CON ALGORITMOS SIMPLES ---------------------------------------------------------
 
 # Separamos la serie temporal completa en train y test para poder comprobar la eficacia del algoritmo
 split_accidentes <-  ts_split(ts.obj = accidentes_ts, sample.out=365)
@@ -91,37 +96,32 @@ length(training) # 1461 valores
 length(test) # 365 valores
 
 
-
 ### FORECASTING CON ARIMA 
 # 'arima_ses <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)' Intenté "forzar" la detección de estacionalidad por parte del modelo ARIMA, pero estaba muchísimo rato el PC 
 # pensando sin llegar nunca a dar ningún resultado.
 
 arima_acc <- auto.arima(training)
 checkresiduals(arima_acc)
-accuracy(arima_acc)
 autoplot(forecast(arima_acc))
 
 
-
 ### FORECASTING CON ETS
-
 ets_acc <- ets(training) # Muestra aviso de que la estacionalidad será ignorada, ETS y ARIMA no son buenos métodos para series estacionales. 
 checkresiduals(ets_acc)
-accuracy(ets_acc)
 autoplot(forecast(ets_acc))
 
 ### FORECASTING CON SNAIVE
-
 snaive_acc <- snaive(training)
-plot(snaive_acc)
 checkresiduals(snaive_acc)
+autoplot(forecast(snaive_acc))
 
 ### FORECASTING CON HOLT WINTERS METHOD
-
 hwm_acc <- HoltWinters(training)
+checkresiduals(hwm_acc)
+autoplot(forecast(hwm_acc))
+
 
 ### COMPARATIVA DE LOS MODELOS CON AUTO ARIMA, ETS, SNAIVE, 
-
 accuracy_arima <- arima_acc %>% forecast(h=365) %>% accuracy(test)
 accuracy_arima[,c("RMSE","MAE","MAPE","MASE")]
 
@@ -134,20 +134,18 @@ accuracy_snaive[,c("RMSE","MAE","MAPE","MASE")]
 accuracy_hwm <- hwm_acc %>% forecast(h=365) %>% accuracy(test)
 accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
 
-accidentes_ts  %>%  auto.arima() %>% forecast(h=365)  %>% autoplot()
-
-## dm test para comparar el accuracy de 2 forecastings https://www.rdocumentation.org/packages/forecast/versions/8.12/topics/dm.test
-dm.test
+# Dentro de los 4 algoritmos simples utilizados para predicción de series temporales, el que mejor resultado ha dado ha sido el ETS.
+# Ahora realizaré la predicción utilizando Prophet que se supone que debería dar una predicción mucho más acertada que estos métodos anteriores. 
 
 
 
 
-### FORECASTING CON PROPHET -------------------------------------------------------------
+### FORECASTING CON PROPHET --------------------------------------------------------------------------------------------------
 
 # mirar efectos de añadir días de vacaciones https://facebook.github.io/prophet/docs/seasonality,_holiday_effects,_and_regressors.html
 # https://nextjournal.com/eric-brown/forecasting-with-prophet-part-3
 
-accidentes_prophet <- mutate(accidentes_sum_dia, ds = Fecha, y = num_acc)
+accidentes_prophet <- mutate(accidentes_prophet, ds = Fecha, y = num_acc)
 accidentes_prophet <- column_to_rownames(accidentes_prophet, var = "Fecha")
 
 m <- prophet(accidentes_prophet, growth = "linear", yearly.seasonality = TRUE) 
@@ -162,8 +160,9 @@ prophet_plot_components(m, forecast) # Gráfico de componentes de la serie tempo
 dyplot.prophet(m, forecast) # gráfico dinámico
 
 
-## CROSS VALIDATION PROHPET -----------------------------------------------------------------------------
 
+
+## CROSS VALIDATION PROHPET -----------------------------------------------------------------------------
 
 df.cv <- cross_validation(m, initial = 1095, period = 180, horizon = 365, units = 'days')
 df.p <- performance_metrics(df.cv)

@@ -141,9 +141,9 @@ accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
 
 
 ### FORECASTING CON PROPHET --------------------------------------------------------------------------------------------------
-
-# mirar efectos de añadir días de vacaciones https://facebook.github.io/prophet/docs/seasonality,_holiday_effects,_and_regressors.html
-# https://nextjournal.com/eric-brown/forecasting-with-prophet-part-3
+# Prophet es un método de predicción de series temporales ideal para datos que tienen una fuerte estacionalidad y es 
+# ideal para trabajar con unos datos como los de los accidentes de Barcelona ya que hemos comprobado que tienen
+# una estacionalidad que se repite todos los años, por lo que debería dar mejores resultados que los métodos previos. 
 
 accidentes_prophet <- mutate(accidentes_prophet, ds = Fecha, y = num_acc)
 accidentes_prophet <- column_to_rownames(accidentes_prophet, var = "Fecha")
@@ -153,32 +153,26 @@ future <- make_future_dataframe(m, periods = 1060) # Predicción de número de a
 forecast <- predict(m, future)
 plot(m, forecast) + add_changepoints_to_plot(m) # En 2017 comienza el cambio de tendencia de bajada del número de accidentes diarios
 
-tail(forecast)
-
 prophet_plot_components(m, forecast) # Gráfico de componentes de la serie temporal
 
-dyplot.prophet(m, forecast) # gráfico dinámico
+dyplot.prophet(m, forecast) # gráfico dinámico con los datos reales y los estimados por Prophet
 
 
 
 
 ## CROSS VALIDATION PROHPET -----------------------------------------------------------------------------
+# Prophet incorpora una función para poder comprobar cómo de eficaz es la predicción del algoritmo
+# utilizando el método de Cross Validation.
 
 df.cv <- cross_validation(m, initial = 1095, period = 180, horizon = 365, units = 'days')
 df.p <- performance_metrics(df.cv)
 head(df.p)
+
 plot_cross_validation_metric(df.cv, metric = 'mae')
+plot_cross_validation_metric(df.cv, metric = 'mse')
+plot_cross_validation_metric(df.cv, metric = 'rmse')
+plot_cross_validation_metric(df.cv, metric = 'mape')
 
 
-
-
-
-## -------------------
-
-accidentes_ts_prophet <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
-
-split_accidentes_prophet <-  ts_split(ts.obj = accidentes_ts_prophet, sample.out=365)
-training_prophet <- split_accidentes_prophet$train
-test_prophet <- split_accidentes_prophet$test
 
 

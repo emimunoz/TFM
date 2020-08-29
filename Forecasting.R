@@ -29,29 +29,37 @@ library(prophet)
 
 ### PREPARACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
 
-accidentes_ds_completo <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+# Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y cierra la sesión.
+# Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, en caso contrario, es posible descargarse los datos
+# desde este link (importar el archivo llamado "accidentes_barcelona.csv"): https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
+accidentes_ds_completo <- read.csv("https://dl.dropbox.com/s/5xzjuw2doii5dqg/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
-# Al importar se ha perdido la clase 'fecha' para la columna del dataset llamada Fecha.
+
+# Al importar se ha perdido la clase 'fecha' para la columna del dataset llamada Fecha
 accidentes_ds_completo$Fecha <- as.Date(accidentes_ds_completo$Fecha)
+
 
 # Creamos una columna con el valor 1 para realizar después un sumatorio de accidentes por día
 accidentes_1 <- accidentes_ds_completo %>% 
   arrange(Fecha) %>% 
   mutate(num_acc=1) 
 
+
 # Se suman los accidentes de cada día
 accidentes_sum_dia <- aggregate(accidentes_1["num_acc"], by=accidentes_1["Fecha"],sum)
+
 
 # Se crea una copia de este dataset para utilizarlo con Prophet
 accidentes_prophet <- accidentes_sum_dia
 
+
 # Quitamos la columna con la fecha para poder pasar a crear ya la serie temporal con todos los accidentes
 accidentes_sum_dia$Fecha <- NULL
+
 
 # Creamos la serie temporal con frecuencia diaria desde el día 1 de enero de 2014
 accidentes_ts <- ts(accidentes_sum_dia, start = c(2014,1,1) , frequency = 365)
 plot(accidentes_ts)
-
 
 
 
@@ -77,17 +85,16 @@ plot(accidentes_descomp)
 
 
 # Obtenemos las gráficas de autocorrelación y autocorrelación parcial, y en ambas se puede observar que aunque no llega a haber
-# una correlación muy elevada (el valor máximo alcanza una correlación de 0.469), si se verifica la estacionalidad de la serie temporal
+# una correlación muy elevada (el valor máximo alcanza una correlación de 0.469), sí se verifica la estacionalidad de la serie temporal
 acf(accidentes_ts)
 pacf(accidentes_ts)
 
 
 
 
+### FORECASTING DE LA SERIE TEMPORAL CON ALGORITMOS SIMPLES ---------------------------------------------------------------
 
-### FORECASTING DE LA SERIE TEMPORAL CON ALGORITMOS SIMPLES ---------------------------------------------------------
-
-# Separamos la serie temporal completa en train y test para poder comprobar la eficacia del algoritmo
+# Separamos la serie temporal completa en train y test para poder comprobar la eficacia de cada algoritmo
 split_accidentes <-  ts_split(ts.obj = accidentes_ts, sample.out=365)
 training <- split_accidentes$train
 test <- split_accidentes$test
@@ -97,8 +104,8 @@ length(test) # 365 valores
 
 
 ### FORECASTING CON ARIMA 
-# 'arima_ses <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)' Intenté "forzar" la detección de estacionalidad por parte del modelo ARIMA, pero estaba muchísimo rato el PC 
-# pensando sin llegar nunca a dar ningún resultado.
+# Intenté "forzar" la detección de estacionalidad por parte del modelo ARIMA, pero estaba muchísimo rato el PC procesando sin llegar a dar ningún resultado.
+# Código utilizado ->        arima_ses <- forecast(auto.arima(ts(accidentes_ts, frequency = 365),D=1),h=365)' 
 
 arima_acc <- auto.arima(training)
 checkresiduals(arima_acc)
@@ -110,10 +117,12 @@ ets_acc <- ets(training) # Muestra aviso de que la estacionalidad será ignorada
 checkresiduals(ets_acc)
 autoplot(forecast(ets_acc))
 
+
 ### FORECASTING CON SNAIVE
 snaive_acc <- snaive(training)
 checkresiduals(snaive_acc)
 autoplot(forecast(snaive_acc))
+
 
 ### FORECASTING CON HOLT WINTERS METHOD
 hwm_acc <- HoltWinters(training)
@@ -121,7 +130,10 @@ checkresiduals(hwm_acc)
 autoplot(forecast(hwm_acc))
 
 
-### COMPARATIVA DE LOS MODELOS CON AUTO ARIMA, ETS, SNAIVE, 
+
+
+### COMPARATIVA DE LOS MODELOS CON AUTO ARIMA, ETS, SNAIVE Y HOLT WINTERS.
+
 accuracy_arima <- arima_acc %>% forecast(h=365) %>% accuracy(test)
 accuracy_arima[,c("RMSE","MAE","MAPE","MASE")]
 
@@ -134,6 +146,9 @@ accuracy_snaive[,c("RMSE","MAE","MAPE","MASE")]
 accuracy_hwm <- hwm_acc %>% forecast(h=365) %>% accuracy(test)
 accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
 
+
+------------------------------------------- comprobar resultados y ponerlo aquí!!!!
+-------------------
 # Dentro de los 4 algoritmos simples utilizados para predicción de series temporales, el que mejor resultado ha dado ha sido el ETS.
 # Ahora realizaré la predicción utilizando Prophet que se supone que debería dar una predicción mucho más acertada que estos métodos anteriores. 
 
@@ -161,8 +176,8 @@ dyplot.prophet(m, forecast) # gráfico dinámico con los datos reales y los esti
 
 
 ## CROSS VALIDATION PROHPET -----------------------------------------------------------------------------
-# Prophet incorpora una función para poder comprobar cómo de eficaz es la predicción del algoritmo
-# utilizando el método de Cross Validation.
+# Prophet incorpora una función para poder comprobar cómo de eficaz es la 
+# predicción del algoritmo utilizando el método de Cross Validation.
 
 df.cv <- cross_validation(m, initial = 1095, period = 180, horizon = 365, units = 'days')
 df.p <- performance_metrics(df.cv)

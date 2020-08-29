@@ -1,4 +1,9 @@
-#------------------------ PREPARACIÓN DE LOS DATOS
+### PREPARACIÓN DE LOS DATOS --------------------------------------------------------------------------------------
+### En este código se importan los datos directamente como se descargan desde la web 
+### open data del Ayuntamiento de Barcelona. Se realiza exploración y limpieza
+### de los datos para prepararlos para usarlos en Tableau y para el forecasting. 
+### --------------------------------------------------------------------------------------------------------------
+
 
 ### Librerías requeridas: 
 install.packages("tidyverse")
@@ -6,46 +11,57 @@ install.packages("data.table")
 install.packages("janitor")
 install.packages("DataExplorer")
 install.packages("lubridate")
-install.packages("plyr")
 
 library(tidyverse)
 library(data.table)
 library(janitor)
 library(DataExplorer)
 library(lubridate)
-library(plyr)
 
 
 
+# Importación de datos desde un archivo en Dropbox:
+accidentes_2014 <- read.csv("https://dl.dropbox.com/s/nqzh9yytym8ayvk/2014_ACCIDENTS_GU_BCN_2014.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2015 <- read.csv("https://dl.dropbox.com/s/yoiwbx1e8lb5jzb/2015_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2016 <- read.csv("https://dl.dropbox.com/s/mu5toz8vbe5rluv/2016_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2017 <- read.csv("https://dl.dropbox.com/s/jvq2oey5drhx7fv/2017_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2018 <- read.csv("https://dl.dropbox.com/s/i4syy7ccvawkylj/2018_accidents_gu_bcn.csv?dl=0", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+
+
+----------------------------
+# He comprobado que la importación desde Dropbox a veces puede ser un poco inconsistente y dar errores a veces  
+# y otras no, en caso de que sucediera se tendría que descargar desde el siguiente link e importar directamente: 
+# https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0
+  
 ### Importación de datasets
-accidentes_2014 <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/CSV Accidentes/2014_ACCIDENTS_GU_BCN_2014.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding="latin1")
-accidentes_2015 <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/CSV Accidentes/2015_accidents_gu_bcn.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE, fileEncoding="latin1")
-accidentes_2016 <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/CSV Accidentes/2016_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-accidentes_2017 <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/CSV Accidentes/2017_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-accidentes_2018 <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/CSV Accidentes/2018_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-
-accidentes_2014 <-  as_tibble(accidentes_2014) 
+accidentes_2014 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2015 <- read.csv("****", header = TRUE, sep = ";", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2016 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2017 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2018 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+----------------------------
+  
+  
+accidentes_2014 <-  as_tibble(accidentes_2014) # Extrañamente ahora meses después de haber terminado este código y continuar con el forecasting, me da un error ahora al convertir este dataset a Tibble "Error in FUN(left) : argumento no válido para un operador unitario"
 accidentes_2015 <-  as_tibble(accidentes_2015)
 accidentes_2016 <-  as_tibble(accidentes_2016)
 accidentes_2017 <-  as_tibble(accidentes_2017) 
 accidentes_2018 <-  as_tibble(accidentes_2018)
 
-### Se comprueba que los datasets de 2014 y 2015 tienen 2 variables menos ("Latitud" y "Longitud"). Además, tienen nombres de columnas diferentes 
-### que los datasets de 2016, 2017 y 2018.
-str(accidentes_2014)
+### Se comprueba que los datasets de 2014 y 2015 tienen 2 variables menos ("Latitud" y "Longitud"). 
+### Además, tienen nombres de columnas diferentes que los datasets de 2016, 2017 y 2018.
+str(accidentes_2015)
 str(accidentes_2016)
 
 
-
-### Se unen los datasets de 2016, 2017 y 2018. Posteriormente se cambiarán los nombres de las columnas a español. Después se hará lo mismo
-### con los datasets de 2014 y 2015 para finalmente unirlos en un único dataset.
+### Se unen los datasets de 2016, 2017 y 2018. Posteriormente se cambiarán los nombres de las columnas a español. 
+### Después se hará lo mismo con los datasets de 2014 y 2015 para finalmente unirlos en un único dataset.
 accidentes_16_17_18 <- rbind(accidentes_2016, accidentes_2017, accidentes_2018)
 
 accidentes_16_17_18 <- accidentes_16_17_18 %>% rename(Num_exp=Numero_expedient, Cod_distrito=Codi_districte, Distrito=Nom_districte, Cod_barrio=Codi_barri, Barrio=Nom_barri, Cod_calle=Codi_carrer, Calle=Nom_carrer, 
     Dia_semana=Descripcio_dia_setmana, Dia_semana_reducido=Dia_setmana, Tipo_dia=Descripcio_tipus_dia, Año=Any, Mes=Mes_any, Dia=Dia_mes, Hora=Hora_dia, 
     Momento_dia=Descripcio_torn, Causa_acc=Descripcio_causa_vianant, Num_muertos=Numero_morts, Num_leves=Numero_lesionats_lleus,
     Num_graves=Numero_lesionats_greus, Num_victimas=Numero_victimes, Num_vehiculos_impl=Numero_vehicles_implicats)
-
 
 
 ### Cambio de nombres a los datasets de 2014 y 2015
@@ -65,10 +81,12 @@ accidentes_2015 <- accidentes_2015 %>%
 
 
 
-### Ahora ya sí se pueden unir todos los datasets en un único dataset con todos los accidentes desde 2015 a 2018. 
+### Ahora ya se pueden unir todos los datasets en un único dataset con todos los accidentes desde 2015 a 2018. 
 ### Los valores de las columnas Latitud y Longitud se rellenerán con NA's en los datos de 2014 y 2015, para no perder dicha información
 ### por si fuera útil cuando quiera representar en un mapa los puntos y quiero comparar su uso con respecto a las coordenadas UTMX/Y
-accidentes <- rbind.fill(accidentes_2014, accidentes_2015, accidentes_16_17_18)
+
+accidentes <- plyr::rbind.fill(accidentes_2014, accidentes_2015, accidentes_16_17_18) 
+# Plyr presenta incompatibilidades con dplyr, por lo que es mejor realizar esta parte del código así para evitar problemas en el paso previo de unión de datasets
 
 
 ### Traducción de los valores que pueden tomar las variables del catalán al español
@@ -83,16 +101,17 @@ accidentes$Barrio <- recode(accidentes$Barrio, "Desconegut"="Desconocido")
 
 
 
-#------------------------ BÚSQUEDA DE MISSING VALUES Y DUPLICADOS
+# BÚSQUEDA DE MISSING VALUES Y DUPLICADOS -------------------------------------------------------------------------------------------------
 
-### Comprobamos si hay duplicados mirando el número de expediente de cada accidente. Si el número se repite, quiere decir que
-### un mismo accidente se ha introducido en la base de datos en más de una ocasión, por lo que saldrá una cifra inferior al número 
-### de observaciones de cada dataset. 
+### Comprobamos si hay duplicados mirando el número de expediente de cada accidente. Si el número se repite, 
+### quiere decir que un mismo accidente se ha introducido en la base de datos en más de una ocasión, por lo que 
+### saldrá una cifra inferior al número de observaciones de cada dataset. 
 
-# En el dataset de 2016 todos los valores son únicos
+
+# En el dataset de 2014 todos los valores son únicos
 length(unique(accidentes_2014$Num_exp))
 
-# En el dataset de 2016 todos los valores son únicos
+# En el dataset de 2015 todos los valores son únicos
 length(unique(accidentes_2015$Num_exp))
 
 # En el dataset de 2016 todos los valores son únicos
@@ -103,7 +122,6 @@ length(unique(accidentes_2017$Numero_expedient))
 
 # En el dataset de 2018 tenemos 10 duplicados
 length(unique(accidentes_2018$Numero_expedient))
-
 
 
 
@@ -145,10 +163,9 @@ accidentes <- accidentes %>%
 accidentes$Fecha <-  as.Date(accidentes$Fecha,"%Y-%m-%d")
  
 
-
-########## ----- !!!! Exportación del dataset accidente para continuar con el trabajo más fácilmente cada día
+# Exportación final del dataset de Accidentes para trabajar con él en Tableau y en el forecasting:
 write_csv2(accidentes, file("accidentes_barcelona.csv"))
-accidentes <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
 
 
 

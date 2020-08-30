@@ -77,7 +77,9 @@ Representando la gráfica de la predicción de Prophet se aprecia como ha captad
 ### Resultados de Prophet
 Finalmente se cumple lo que había estimado: **la predicción utilizando Prophet es mucho más precisa que con el resto de métodos más simples.** En el caso del ETS se obtenían unos KPIs al comparar el algoritmo con los datos de test con valor de RMSE 9.28 y MAE: 7.56, y con Holt Winters los resultados eran RMSE: 9.84 y MAE: 10.79. Los resultados utilizando Prophet han sido los siguientes:
 
-![](https://i.imgur.com/j8jPxbl.jpg)
+![](https://i.imgur.com/sM6ujy2.png)
+
+Hay una diferencia de más de 2 puntos en el KPI del RMSE y MAE, si comparamos ya con Auto.ARIMA (MRSE: 11.65 y MAE: 9.54)que fue la que peores KPIs dio de los 4 métodos de predicción simples, la diferencia es aun más considerable. Por lo tanto, podemos confirmar que Prophet ha sido el algoritmo que, con diferencia, **ha conseguido los resultados más ajustados y precisos** a la hora de predecir el número de accidentes que habrá en la ciudad de Barcelona para los próximos 3 años.
 
 
 ## Visualización con Tableau

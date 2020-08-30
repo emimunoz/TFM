@@ -56,7 +56,7 @@ La distribución semanal de accidentes se verá más claramente después en una 
 ### Accidentes al año
 En el primer gráfico se puede ver que la tendencia es que a cada año que pasa, **el número de accidentes es inferior al del año anterior**.  Lo cual coincide con lo estimado por Prophet que indicaba que la tendencia era a que disminuyera el número de accidentes. También es bastante representativo comprobar cómo claramente el mes con menos accidentes siempre es agosto. Para una ciudad tan turística como es Barcelona, este mes será de los que más visitantes extranjeros recibe, pero aún así hay menos accidentes. Por lo que podríamos suponer que los principales responsables de los accidentes en Barcelona son personas en horario laboral. Ya que en agosto es cuando más gente se va de vacaciones normalmente. 
 
-![](https://i.imgur.com/EXC99bU.jpg)
+![](https://i.imgur.com/EXC99bU.png)
 
 
 

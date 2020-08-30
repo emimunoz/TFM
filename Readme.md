@@ -66,21 +66,19 @@ Sin embargo, comparando los histogramas que muestra el checkresiduals, el métod
 ### Predicción utilizando Prophet
 Los métodos anteriores se quedan como referencia para comparar con Prophet, un método de predicción de series temporales que es **ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 5 años de accidentes con fuerte estacionalidad, por lo que con los datos que estamos trabajando debería justarse adecuadamente y obtener unos resultados mejores que con los métodos previos.
 
-Lo primero será crear una columna con el valor _‘1’_ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna _‘ds’_ con la fecha y otra _‘y’_ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:
+Con prophet se puede ver la descomposición de los componentes de la serie. Tal y como se aprecia aplicándolo a la serie de accidentes en Barcelona, se comprueba que la tendencia era a subir hasta pasado el año 2017 que comienza a tener una tendencia a descender año tras año ligeramente (apenas hablamos de una variación de 8 accidentes diarios como rango máximo para el caso máximo real y el mínimo estimado para el año 2022 por Prophet). Se aprecia también que en la época del verano es cuando disminuyen los accidentes, especialmente durante el mes de agosto.  
 
-![](https://i.imgur.com/LnM6w2F.jpg)
+![](https://i.imgur.com/U6F3BB1.jpg)
 
-Intenté realizar una **transformación Box-Cox** utilizando la función _Box-Cox.lambda()_ para tratar de averiguar el valor de lambda más adecuado para dicha transformación. Pero al representar ambos valores obtenidos en una visualización no se observaba ninguna variación en la serie temporal. Por lo que decidí realizar directamente el forecasting con el dataset de accidentes preparado para Prophet, obteniendo la siguiente representación de la predicción:
+Representando la gráfica de la predicción de Prophet se aprecia como ha captado la estacionalidad de la serie y le aplica una tendencia ligeramente a la baja para el número de accidentes para los años 2019 a 2022: 
 
-![](https://i.imgur.com/gVpGYn6.jpg)
+![](https://i.imgur.com/j8jPxbl.jpg)
 
-Con la función _prophet_plot_components()_ es posible visualizar una **visualización general de la tendencia** de los datos de accidentes en la ciudad de Barcelona:
+### Resultados de Prophet
+Finalmente se cumple lo que había estimado: **la predicción utilizando Prophet es mucho más precisa que con el resto de métodos más simples.** En el caso del ETS se obtenían unos KPIs al comparar el algoritmo con los datos de test con valor de RMSE 9.28 y MAE: 7.56, y con Holt Winters los resultados eran RMSE: 9.84 y MAE: 10.79. Los resultados utilizando Prophet han sido los siguientes:
 
-![](https://i.imgur.com/0jBu3DU.jpg)
+![](https://i.imgur.com/j8jPxbl.jpg)
 
-Se puede comprobar que la tendencia es que el número de accidentes continúen **disminuyendo después de haber alcanzado un valor máximo en el año 2017**,  con una media de 28 accidentes diarios. Para el año 2020 se estima que baje a 26. No es un cambio considerable pero es una relativamente buena noticia que el número de accidentes tienda a disminuir.
-
-La distribución semanal de accidentes se verá más claramente después en una visualización de Tableau. Sin embargo, en la distribución anual, llama la atención comprobar cómo en el mes de Agosto disminuye considerablemente el número de accidentes. Algo que habría que estudiar a ver si realmente es un fallo de los datos o no, ya que en teoría Barcelona es una ciudad muy turística y en dicho mes tendría un gran número de visitantes extranjeros. 
 
 ## Visualización con Tableau
 ### Accidentes al año

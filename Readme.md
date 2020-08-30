@@ -102,4 +102,4 @@ Aquí también podemos ver que durante la tarde y la mañana es la hora del día
 ### Accidentes a lo largo de la semana
 
 Por último, tenemos un gráfico donde se ven los accidentes en cada día de la semana y el número de accidentes mortales de media para cada día. Este gráfico vuelve a confirmar lo que sospechábamos en los gráficos previos: **la mayoría de accidentes ocurren durante jornada laboral.** Los sábados y domingos el número de accidentes disminuye considerablemente. Los días con más accidentes mortales son el lunes y viernes, siendo este último el día con más accidentes en general también. 
-![](https://i.imgur.com/SjjlKSr.jpg = 250x)
+![image](https://i.imgur.com/SjjlKSr.jpg = 250x)

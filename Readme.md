@@ -32,6 +32,36 @@ A raíz de los comentarios que recibí cuando presenté inicialmente mi Trabajo 
 Para tratar de conseguir un resultado que se ajustara más a la forma de la serie temporal con la que se trabaja, intenté "forzar" la detección de estacionalidad en el modelo con Auto.ARIMA, pero después de dejar el ordenador durante bastante rato procesando, nunca llegaba a dar ningún resultado. Los resultados obtenidos con Auto.ARIMA son los siguientes:
 
 ![](https://i.imgur.com/YB8GxXb.png)
+![](https://i.imgur.com/ywWqGCX.jpg)
+![](https://i.imgur.com/6eh9R2F.jpg)
+
+### SNAIVE
+Los resultados obtenidos usando el método de SNAIVE son los siguientes:
+
+![](https://i.imgur.com/X7fjKba.png)
+![](https://i.imgur.com/VfeiFJZ.jpg)
+![](https://i.imgur.com/1du1JdC.jpg)
+
+### ETS 
+En el caso de este método, se consiguen los mejores resultados de los 4, en parte es debido a que es el más adecuado para series como la que estamos tratando que tiene una fuerte estacionalidad. Los resultados obtenidos usando el método de ETS (error, trend, seasonal) son los siguientes:
+
+![](https://i.imgur.com/N97T9Kv.png)
+![](https://i.imgur.com/CW7QELb.jpg)
+![](https://i.imgur.com/CW7QELb.jpg)
+
+### Holt Winters
+Este método de predicción también está muy indicado para series con fuerte estacionalidad, pero los resultados obtenidos son peores, aunque el gráfico de predicción es más ajustado que el del modelo ETS:
+
+![](https://i.imgur.com/fIa5ro1.png)
+![](https://i.imgur.com/F3J4Pws.jpg)
+![](https://i.imgur.com/3yfKwQ9.jpg)
+
+### Resultados
+
+
+
+![]()
+
 
 
 Para el estudio de la predicción de accidentes he decidido utilizar **Prophet** ya que es una librería que permite realizar predicciones de series temporales de una manera sencilla y fiable. **Ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.

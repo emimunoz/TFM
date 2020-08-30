@@ -57,13 +57,13 @@ Este método de predicción también está muy indicado para series con fuerte e
 ![](https://i.imgur.com/3yfKwQ9.jpg)
 
 ### Resultados
+Comparando los KPIs resultado de los 4 métodos de predicción, se comprueba que métodos como el ETS y Holt Winters son los que mejores resultados han obtenido. Estos resultados cuadran con lo esperado, ya que son dos métodos que trabajan bien con datos que tienen estacionalidad, y como se podrá comprobar en la parte de visualización, la gráfica de la distribución de accidentes a lo largo de cada año se repite con gran similitud. 
 
+![](https://i.imgur.com/95dGpvz.png)
 
+Sin embargo, comparando los histogramas que muestra el checkresiduals, el método de Auto.ARIMA es el que mantiene una distribución que se asemeja más a la normal para los errores. En el caso de Holt Winters hay un pico que sobresale considerablemente de la distribución normal, y con ETS en la zona izquierda de la distribución se aprecia que se queda por debajo de la curva. 
 
-![]()
-
-
-
+### Predicción utilizando Prophet
 Para el estudio de la predicción de accidentes he decidido utilizar **Prophet** ya que es una librería que permite realizar predicciones de series temporales de una manera sencilla y fiable. **Ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.
 
 Lo primero será crear una columna con el valor _‘1’_ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna _‘ds’_ con la fecha y otra _‘y’_ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:

@@ -31,7 +31,7 @@ A raíz de los comentarios que recibí cuando presenté inicialmente mi Trabajo 
 ### Auto.ARIMA
 Para tratar de conseguir un resultado que se ajustara más a la forma de la serie temporal con la que se trabaja, intenté "forzar" la detección de estacionalidad en el modelo con Auto.ARIMA, pero después de dejar el ordenador durante bastante rato procesando, nunca llegaba a dar ningún resultado. Los resultados obtenidos con Auto.ARIMA son los siguientes:
 
-![](https://imgur.com/a/Wt3y3pr.jpg)
+![](https://i.imgur.com/YB8GxXb.png)
 
 
 Para el estudio de la predicción de accidentes he decidido utilizar **Prophet** ya que es una librería que permite realizar predicciones de series temporales de una manera sencilla y fiable. **Ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.

@@ -7,6 +7,7 @@
 * **Forecasting:** En este código se preparan los datos y se estudian las características de la serie temporal para realización de la predicción del número de accidentes utilizando los métodos: Auto.ARIMA, ETS, SNAIVE, Holt Winters y Prophet. 
 * **Visualization:** El archivo con los gráficos para visualizar los datos en Tableau.
 * **Map Visualization:** El archivo con la visualización de los puntos de accidentes en la ciudad de Barcelona. 
+
 * He intentado que todos los archivos necesarios para ejecutar el código se descarguen directamente desde Dropbox para facilitar el proceso de revisión del código. Pero he comprobado que el proceso de importación es inconsistente y a veces ha dado errores, por lo que en caso de que fallara, se pueden descargar todos los archivos necesarios desde este link -> https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
 
 ## La idea
@@ -66,7 +67,7 @@ Sin embargo, comparando los histogramas que muestra el checkresiduals, el métod
 ### Predicción utilizando Prophet
 Los métodos anteriores se quedan como referencia para comparar con Prophet, un método de predicción de series temporales que es **ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 5 años de accidentes con fuerte estacionalidad, por lo que con los datos que estamos trabajando debería justarse adecuadamente y obtener unos resultados mejores que con los métodos previos.
 
-Con prophet se puede ver la descomposición de los componentes de la serie. Tal y como se aprecia aplicándolo a la serie de accidentes en Barcelona, se comprueba que la tendencia era a subir hasta pasado el año 2017 que comienza a tener una tendencia a descender año tras año ligeramente (apenas hablamos de una variación de 8 accidentes diarios como rango máximo para el caso máximo real y el mínimo estimado para el año 2022 por Prophet). Se aprecia también que en la época del verano es cuando disminuyen los accidentes, especialmente durante el mes de agosto.  
+Con Prophet se puede ver la descomposición de los componentes de la serie. Tal y como se aprecia aplicándolo a la serie de accidentes en Barcelona, se comprueba que la tendencia era a subir hasta pasado el año 2017 que comienza a tener una tendencia a descender año tras año ligeramente (apenas hablamos de una variación de 8 accidentes diarios como rango máximo para el caso máximo real y el mínimo estimado para el año 2022 por Prophet). Se aprecia también que en la época del verano es cuando disminuyen los accidentes, especialmente durante el mes de agosto.  
 
 ![](https://i.imgur.com/U6F3BB1.jpg)
 

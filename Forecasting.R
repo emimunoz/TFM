@@ -32,7 +32,7 @@ library(prophet)
 # Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y cierra la sesión.
 # Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, en caso contrario, es posible descargarse los datos
 # desde este link (importar el archivo llamado "accidentes_barcelona.csv"): https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
-accidentes_ds_completo <- read.csv("https://dl.dropbox.com/s/5xzjuw2doii5dqg/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+accidentes_ds_completo <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
 
 # Al importar se ha perdido la clase 'fecha' para la columna del dataset llamada Fecha
@@ -147,12 +147,6 @@ accuracy_hwm <- hwm_acc %>% forecast(h=365) %>% accuracy(test)
 accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
 
 
-------------------------------------------- comprobar resultados y ponerlo aquí!!!!
--------------------
-# Dentro de los 4 algoritmos simples utilizados para predicción de series temporales, el que mejor resultado ha dado ha sido el ETS.
-# Ahora realizaré la predicción utilizando Prophet que se supone que debería dar una predicción mucho más acertada que estos métodos anteriores. 
-
-
 
 
 ### FORECASTING CON PROPHET --------------------------------------------------------------------------------------------------
@@ -182,6 +176,11 @@ dyplot.prophet(m, forecast) # gráfico dinámico con los datos reales y los esti
 df.cv <- cross_validation(m, initial = 1095, period = 180, horizon = 365, units = 'days')
 df.p <- performance_metrics(df.cv)
 head(df.p)
+
+# Vamos a sacar la media de los valores KPI para comparar con el resto de métodos utilizados
+resultados_prophet = subset(df.p, select = c(rmse,mae,mape))
+head(resultados_prophet)
+colMeans(resultados_prophet)
 
 plot_cross_validation_metric(df.cv, metric = 'mae')
 plot_cross_validation_metric(df.cv, metric = 'mse')

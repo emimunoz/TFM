@@ -76,7 +76,9 @@ Representando la gráfica de la predicción de Prophet se aprecia como ha captad
 ![](https://i.imgur.com/j8jPxbl.jpg)
 
 ### Resultados de Prophet
-Finalmente se cumple lo que había estimado: **la predicción utilizando Prophet es mucho más precisa que con el resto de métodos más simples.** En el caso del ETS se obtenían unos KPIs al comparar el algoritmo con los datos de test con valor de RMSE 9.28 y MAE: 7.56, y con Holt Winters los resultados eran RMSE: 9.84 y MAE: 10.79. Los resultados utilizando Prophet han sido los siguientes:
+Finalmente se cumple lo que había estimado: **la predicción utilizando Prophet es mucho más precisa que con el resto de métodos más simples.** En el caso del ETS se obtenían unos KPIs al comparar el algoritmo con los datos de test con valor de RMSE 9.28 y MAE: 7.56, y con Holt Winters los resultados eran RMSE: 9.84 y MAE: 10.79. 
+
+Los resultados utilizando Prophet han sido los siguientes:
 
 ![](https://i.imgur.com/sM6ujy2.png)
 

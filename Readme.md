@@ -7,24 +7,33 @@
 * **Forecasting:** En este código se preparan los datos y se estudian las características de la serie temporal para realización de la predicción del número de accidentes utilizando los métodos: Auto.ARIMA, ETS, SNAIVE, Holt Winters y Prophet. 
 * **Visualization:** El archivo con los gráficos para visualizar los datos en Tableau.
 * **Map Visualization:** El archivo con la visualización de los puntos de accidentes en la ciudad de Barcelona. 
+* He intentado que todos los archivos necesarios para ejecutar el código se descarguen directamente desde Dropbox para facilitar el proceso de revisión del código. Pero he comprobado que el proceso de importación es inconsistente y a veces ha dado errores, por lo que en caso de que fallara, se pueden descargar todos los archivos necesarios desde este link -> https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
 
 ## La idea
 La idea inicial que me habría gustado desarrollar como Trabajo Final de Máster consistía en un estudio sobre la asistencia a las urgencias de diversos hospitales dependiendo del día y los eventos sociales de cada día. La finalidad era encontrar la más que sabida relación entre la saturación de las urgencias y días que no coinciden con festivos o eventos deportivos relevantes, ya que los días que hay eventos sociales de ese tipo, las urgencias están menos saturadas. 
 
 Después de ponerme en contacto con el INE y el Ministerio de Sanidad me fue imposible conseguir los datos para dicho estudio, y ante la proximidad de la fecha límite para entregar el Trabajo Final de Máster, me decidí por realizar una versión alternativa de dicho estudio pero con datos de accidentes en la ciudad de Barcelona. 
 
-Lo he realizado todo en lenguaje R ya que ha sido el lenguaje con el que más cómodo me he sentido a la hora de trabajar durante todo el Máster. Además, por las ventajas que ofrece R Studio a la hora de realizar un proyecto de análisis y modificación de datos. Me habría gustado en un principio realizar una parte en Python y otra en R, pero lo dejaré para más adelante a modo de reto personal. 
+Lo he realizado todo en lenguaje R ya que ha sido el lenguaje con el que más cómodo me he sentido a la hora de trabajar durante todo el Máster. Además, por las ventajas que ofrece R Studio a la hora de realizar un proyecto de análisis y modificación de datos. 
 
 ## Desarrollo
-Los [datos](https://opendata-ajuntament.barcelona.cat/data/es/dataset/accidents-gu-bcn) los he descargado desde la web [Open Data BCN](https://opendata-ajuntament.barcelona.cat/es/) que pone a disposición el Ayuntamiento de Barcelona. En concreto he querido trabajar con los datos de los **últimos 3 años: 2016, 2017 y 2018**. El trabajo de limpieza y preparación de los mismos ha sido bastante sencillo, ya que apenas he tenido que realizar modificaciones para poder trabajar con ellos en la predicción y en la visualización a posteriori con Tableau. 
+Los [datos](https://opendata-ajuntament.barcelona.cat/data/es/dataset/accidents-gu-bcn) los he descargado desde la web [Open Data BCN](https://opendata-ajuntament.barcelona.cat/es/) que pone a disposición el Ayuntamiento de Barcelona. En concreto he querido trabajar con los datos de los **últimos 5 años: 2014, 2015, 2016, 2017 y 2018**. El trabajo de limpieza y preparación de los mismos ha sido bastante sencillo, ya que apenas he tenido que realizar modificaciones para poder trabajar con ellos en la predicción y en la visualización a posteriori con Tableau. 
 
 ![](https://i.imgur.com/vDjZkq8.jpg)
 
-Para facilitar el proceso de corrección los he subido a una carpeta en Dropbox y se descargan directamente desde el código en R. Los cambios que he realizado en el dataset ha sido retirar columnas que no iba a utilizar, traducir los nombres de columnas y valores que estaban en catalán al español y la búsqueda de valores duplicados. 
+Los cambios que he realizado en el dataset ha sido retirar columnas que no iba a utilizar, traducir los nombres de columnas y valores que estaban en catalán al español y la búsqueda de valores duplicados. 
 
 No hay muchos valores duplicados en el dataset, pero los pocos que hay, el motivo de estar duplicados es por la clasificación de la causa del accidente. En algunas ocasiones se indica como causa _“Otros”_ y otro dato con una causa más específica, por lo que me he quedado con los valores que ofrecen más información sobre la causa del accidente. Ya para finalizar con la preparación previa de los datos he creado una columna con la fecha en la que  sucedió cada accidente. Exportando al final el archivo _CSV_ con el que se trabajará después para realizar el Forecasting y para la visualización en Tableau.
 
 ## Forecasting
+A raíz de los comentarios que recibí cuando presenté inicialmente mi Trabajo Final de Máster, he decidido introducir otros métodos de predicción más simples para comparar los resultados con los que se obtienen con Prophet. En concreto he utilizado Auto.ARIMA, ETS, SNAIVE y Holt Winters que he visto que son de los más populares a la hora de trabajar con series temporales.
+
+### Auto.ARIMA
+Para tratar de conseguir un resultado que se ajustara más a la forma de la serie temporal con la que se trabaja, intenté "forzar" la detección de estacionalidad en el modelo con Auto.ARIMA, pero después de dejar el ordenador durante bastante rato procesando, nunca llegaba a dar ningún resultado. Los resultados obtenidos con Auto.ARIMA son los siguientes:
+
+![](https://imgur.com/a/Wt3y3pr.jpg)
+
+
 Para el estudio de la predicción de accidentes he decidido utilizar **Prophet** ya que es una librería que permite realizar predicciones de series temporales de una manera sencilla y fiable. **Ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.
 
 Lo primero será crear una columna con el valor _‘1’_ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna _‘ds’_ con la fecha y otra _‘y’_ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:

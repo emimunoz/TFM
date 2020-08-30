@@ -47,7 +47,7 @@ En el caso de este método, se consiguen los mejores resultados de los 4, en par
 
 ![](https://i.imgur.com/N97T9Kv.png)
 ![](https://i.imgur.com/CW7QELb.jpg)
-![](https://i.imgur.com/CW7QELb.jpg)
+![](https://i.imgur.com/jrvQZE1.jpg)
 
 ### Holt Winters
 Este método de predicción también está muy indicado para series con fuerte estacionalidad, pero los resultados obtenidos son peores, aunque el gráfico de predicción es más ajustado que el del modelo ETS:
@@ -64,7 +64,7 @@ Comparando los KPIs resultado de los 4 métodos de predicción, se comprueba que
 Sin embargo, comparando los histogramas que muestra el checkresiduals, el método de Auto.ARIMA es el que mantiene una distribución que se asemeja más a la normal para los errores. En el caso de Holt Winters hay un pico que sobresale considerablemente de la distribución normal, y con ETS en la zona izquierda de la distribución se aprecia que se queda por debajo de la curva. 
 
 ### Predicción utilizando Prophet
-Para el estudio de la predicción de accidentes he decidido utilizar **Prophet** ya que es una librería que permite realizar predicciones de series temporales de una manera sencilla y fiable. **Ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 3 años de accidentes, en un principio estaría todo correcto para obtener una buena predicción.
+Los métodos anteriores se quedan como referencia para comparar con Prophet, un método de predicción de series temporales que es **ideal para trabajar con datos con periodicidad diaria y con al menos un año de datos en el dataset**. En mi caso como dispongo de datos diarios de 5 años de accidentes con fuerte estacionalidad, por lo que con los datos que estamos trabajando debería justarse adecuadamente y obtener unos resultados mejores que con los métodos previos.
 
 Lo primero será crear una columna con el valor _‘1’_ que nos servirá para realizar un sumatorio y obtener la cifra de accidentes que ha habido por día. Una vez realizado esto para trabajar con Prophet simplemente se tiene que editar el dataframe de datos añadiendo una columna _‘ds’_ con la fecha y otra _‘y’_ con los valores obtenidos en cada día.  Representamos la serie temporal con los datos de accidentes de 2016, 2017 y 2018, separados por una línea vertical:
 

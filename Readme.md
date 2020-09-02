@@ -107,3 +107,14 @@ Aquí se confirma que claramente la inmensa mayoría de los accidentes se produc
 Es destacable que el sábado se alcance la cifra máxima de víctimas mortales junto con el lunes. Quizás es debido a que aunque haya bastantes menos accidentes que durante la semana, los accidentes que sucedan se dan en condiciones de más riesgo y por lo tanto acaban resultando en el fallecimiento de víctimas afectadas. 
 
 ![](https://i.imgur.com/t3QINDS.png)
+
+### Puntos calientes de accidentes en el mapa de Barcelona
+Finalmente, aquí se puede visualizar todos los accidentes sucedidos en los 5 años analizados en este proyecto (de 2014 a 2018). Como se ha visto previamente, la zona céntrica de Barcelona es la que más accidentes acumula, pero también se puede apreciar cómo en la carreteras que circunvalan la ciudad también aparece una acumulación de puntos de accidentes. 
+
+![](https://i.imgur.com/WlohiX2.jpg)
+![](https://i.imgur.com/9GMu6m4.jpg)
+
+##Conclusiones finales
+Todo proyecto de análisis de datos surge de una necesidad de conocer unos datos que se poseen y sacar información que pueda ser de utilidad para solventar un problema o necesidad que haya. La conclusión que se podría sacar después de haber realizado este análisis de los accidentes de la ciudad de Barcelona es que sería recomendable incentivar el uso del transporte público para ir al trabajo. Se ha comprobado que la mayoría de accidentes suceden en desplazamientos durante el horario normalmente laboral. Si se redujera el número de personas que recurren a vehículos particulares para acudir al trabajo, se reducirían los accidentes. 
+
+Tras todo lo acontecido durante la actual pandemia debida al COVID-19, el número de accidentes se habrá visto reducido muchísimo más de lo estimado con los datos de años previos, pero también es de esperar que una vez pase todo, haya menos accidentes ya que muchas empresas seguirán recurriendo al teletrabajo para reducir costes y ofrecer facilidades a sus empleados. 

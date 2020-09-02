@@ -86,18 +86,18 @@ Hay una diferencia de más de 2 puntos en el KPI del RMSE y MAE, si comparamos y
 
 
 ## Visualización con Tableau
-### Accidentes al año
-En el primer gráfico se puede ver que la tendencia es que a cada año que pasa, **el número de accidentes es inferior al del año anterior**.  Lo cual coincide con lo estimado por Prophet que indicaba que la tendencia era a que disminuyera el número de accidentes. También es bastante representativo comprobar cómo claramente el mes con menos accidentes siempre es agosto. Para una ciudad tan turística como es Barcelona, este mes será de los que más visitantes extranjeros recibe, pero aún así hay menos accidentes. Por lo que podríamos suponer que los principales responsables de los accidentes en Barcelona son personas en horario laboral. Ya que en agosto es cuando más gente se va de vacaciones normalmente. 
+### Accidentes por distrito y momento del día
+En este gráfico se comprueba que claramente la zona de Eixample es la que más accidentes reúne de toda la ciudad de Barcelona. Se trata de un **distrito que se encuentra justo en el centro de la ciudad**, por lo que es lógico. Aunque sorprende ver la considerable diferencia con respecto al resto de distritos.
 
-![](https://i.imgur.com/EXC99bU.png)
+![](https://i.imgur.com/BEjivPO.png)
 
 
+### Accidentes durante el día y víctimas graves
+Este gráfico puede resultar un poco difícil de interpretar a simple vista. Las columnas muestran el número de accidentes en cada hora del día en los años 2014 a 2018. La intensidad del color azul muestra el número de víctimas afectadas en cada accidente, es decir, más personas iban en cada uno de los vehículos afectados o más vehículos se han visto involucrados en el accidentes. Y el ancho de cada columna indica el número resultante de víctimas graves al accidente. 
 
-### Accidentes por distrito
+Se comprueba que la hora con más accidentes y víctimas afectadas es las 2 de la tarde, y cuando más afectados graves es a las 6 de la tarde. También se aprecia como en las horas que más movimiento habrá de usuarios **yendo al trabajo o saliendo del trabajo, es cuando más accidentes hay**. Entre las 8 y 9 de la mañana va aumentando el número de accidentes, que se reduce a las 10 y progresivamente asciende hasta las 2 de la tarde.  
 
-Aquí también podemos ver que durante la tarde y la mañana es la hora del día en la que más accidentes suele haber. El distrito de **Eixample es el que más accidentes acumula** ya que es de las zonas más céntricas de Barcelona, por lo que es por donde más gente circula y es obvio que sucederán más accidentes. El distrito de Sant Martí es junto al de Sants-Montjuic el que más accidentes por la noche. En Sant Martí es donde podemos encontrar una de las zonas de fiesta de Barcelona con discotecas como Razzmatazz. Por lo que tiene cierta lógica que acumule más accidentes. 
-
-![](https://i.imgur.com/nmkSPur.jpg)
+![](https://i.imgur.com/tT1qg8f.png)
 
 
 

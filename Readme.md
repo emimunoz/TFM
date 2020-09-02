@@ -114,7 +114,7 @@ Finalmente, aquí se puede visualizar todos los accidentes sucedidos en los 5 a�
 ![](https://i.imgur.com/WlohiX2.jpg)
 ![](https://i.imgur.com/9GMu6m4.jpg)
 
-##Conclusiones finales
+## Conclusiones finales
 Todo proyecto de análisis de datos surge de una necesidad de conocer unos datos que se poseen y sacar información que pueda ser de utilidad para solventar un problema o necesidad que haya. La conclusión que se podría sacar después de haber realizado este análisis de los accidentes de la ciudad de Barcelona es que sería recomendable incentivar el uso del transporte público para ir al trabajo. Se ha comprobado que la mayoría de accidentes suceden en desplazamientos durante el horario normalmente laboral. Si se redujera el número de personas que recurren a vehículos particulares para acudir al trabajo, se reducirían los accidentes. 
 
 Tras todo lo acontecido durante la actual pandemia debida al COVID-19, el número de accidentes se habrá visto reducido muchísimo más de lo estimado con los datos de años previos, pero también es de esperar que una vez pase todo, haya menos accidentes ya que muchas empresas seguirán recurriendo al teletrabajo para reducir costes y ofrecer facilidades a sus empleados. 

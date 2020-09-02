@@ -102,6 +102,8 @@ Se comprueba que la hora con más accidentes y víctimas afectadas es las 2 de l
 
 
 ### Accidentes a lo largo de la semana
+Aquí se confirma que claramente la inmensa mayoría de los accidentes se producen durante desplazamientos al trabajo, ya que el sábado y domingo la cifra de accidentes disminuye considerablemente. Es curioso comprobar como el **número de accidentes va aumentando progresivamente** desde el lunes hasta el número más alto el viernes, quizás porque la gente conducirá con más ansia y nervios conforme más días trabajando pasan, deseando que llegue el fin de semana. 
 
-Por último, tenemos un gráfico donde se ven los accidentes en cada día de la semana y el número de accidentes mortales de media para cada día. Este gráfico vuelve a confirmar lo que sospechábamos en los gráficos previos: **la mayoría de accidentes ocurren durante jornada laboral.** Los sábados y domingos el número de accidentes disminuye considerablemente. Los días con más accidentes mortales son el lunes y viernes, siendo este último el día con más accidentes en general también. 
-![](https://i.imgur.com/SjjlKSr.jpg)
+Es destacable que el sábado se alcance la cifra máxima de víctimas mortales junto con el lunes. Quizás es debido a que aunque haya bastantes menos accidentes que durante la semana, los accidentes que sucedan se dan en condiciones de más riesgo y por lo tanto acaban resultando en el fallecimiento de víctimas afectadas. 
+
+![](https://i.imgur.com/t3QINDS.png)

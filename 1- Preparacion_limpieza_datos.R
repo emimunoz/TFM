@@ -29,20 +29,20 @@ accidentes_2018 <- read.csv("https://dl.dropbox.com/s/i4syy7ccvawkylj/2018_accid
 
 
 ----------------------------
-# He comprobado que la importación desde Dropbox a veces puede ser un poco inconsistente y dar errores a veces  
-# y otras no, en caso de que sucediera se tendría que descargar desde el siguiente link e importar directamente: 
-# https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0
+# He comprobado que la importación desde Dropbox puede ser un poco inconsistente y dar errores a veces  
+# y otras no, en caso de que sucediera se tendrían que descargar desde la carpeta de Datos en GitHub.
+# e importarlos cambiando la ruta 
   
 ### Importación de datasets
-accidentes_2014 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding="latin1")
-accidentes_2015 <- read.csv("****", header = TRUE, sep = ";", stringsAsFactors = FALSE, fileEncoding="latin1")
-accidentes_2016 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-accidentes_2017 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
-accidentes_2018 <- read.csv("****", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2014 <- read.csv("2014_ACCIDENTS_GU_BCN_2014.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2015 <- read.csv("2015_accidents_gu_bcn.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE, fileEncoding="latin1")
+accidentes_2016 <- read.csv("2016_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2017 <- read.csv("2017_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
+accidentes_2018 <- read.csv("2018_accidents_gu_bcn.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE)
 ----------------------------
   
   
-accidentes_2014 <-  as_tibble(accidentes_2014) # Extrañamente ahora meses después de haber terminado este código y continuar con el forecasting, me da un error ahora al convertir este dataset a Tibble "Error in FUN(left) : argumento no válido para un operador unitario"
+accidentes_2014 <-  as_tibble(accidentes_2014) 
 accidentes_2015 <-  as_tibble(accidentes_2015)
 accidentes_2016 <-  as_tibble(accidentes_2016)
 accidentes_2017 <-  as_tibble(accidentes_2017) 

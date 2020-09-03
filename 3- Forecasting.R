@@ -29,10 +29,13 @@ library(prophet)
 
 ### PREPARACIÓN DE LA SERIE TEMPORAL ----------------------------------------------
 
-# Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y cierra la sesión.
-# Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, en caso contrario, es posible descargarse los datos
-# desde este link (importar el archivo llamado "accidentes_barcelona.csv"): https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
-accidentes_ds_completo <- read.csv("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/accidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
+# Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y 
+# cierra la sesión. Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, 
+# en caso contrario, es posible descargarse los datos desde la carpeta Datos en GitHub.
+accidentes_ds_completo <- read.csv("https://dl.dropbox.com/s/5xzjuw2doii5dqg/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
+accidentes_ds_completo <- read.csv("haccidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
 
 # Al importar se ha perdido la clase 'fecha' para la columna del dataset llamada Fecha
@@ -113,7 +116,7 @@ autoplot(forecast(arima_acc))
 
 
 ### FORECASTING CON ETS
-ets_acc <- ets(training) # Muestra aviso de que la estacionalidad será ignorada, ETS y ARIMA no son buenos métodos para series estacionales. 
+ets_acc <- ets(training)
 checkresiduals(ets_acc)
 autoplot(forecast(ets_acc))
 
@@ -124,7 +127,7 @@ checkresiduals(snaive_acc)
 autoplot(forecast(snaive_acc))
 
 
-### FORECASTING CON HOLT WINTERS METHOD
+### FORECASTING CON HOLT WINTERS 
 hwm_acc <- HoltWinters(training)
 checkresiduals(hwm_acc)
 autoplot(forecast(hwm_acc))
@@ -151,7 +154,7 @@ accuracy_hwm[,c("RMSE","MAE","MAPE","MASE")]
 
 ### FORECASTING CON PROPHET --------------------------------------------------------------------------------------------------
 # Prophet es un método de predicción de series temporales ideal para datos que tienen una fuerte estacionalidad y es 
-# ideal para trabajar con unos datos como los de los accidentes de Barcelona ya que hemos comprobado que tienen
+# muy adecuado para trabajar con unos datos como los de los accidentes de Barcelona ya que hemos comprobado que tienen
 # una estacionalidad que se repite todos los años, por lo que debería dar mejores resultados que los métodos previos. 
 
 accidentes_prophet <- mutate(accidentes_prophet, ds = Fecha, y = num_acc)

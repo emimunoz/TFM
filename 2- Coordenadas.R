@@ -13,11 +13,13 @@ library(rgdal)
 library(sp)
 
 
-# Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y cierra la sesión.
-# Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, en caso contrario, es posible descargarse los datos
-# desde este link (importar el archivo llamado "accidentes_barcelona.csv"): https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
+# Resulta imposible importar directamente desde Dropbox el CSV con todos los accidentes de 2014 a 2018, ya que R Studio da error y 
+# cierra la sesión. Dejaré el código para su importación desde Dropbox por si fuera un error particular de mi ordenador, 
+# en caso contrario, es posible descargarse los datos desde la carpeta Datos en GitHub.
 
 accidentes<- read.csv("https://dl.dropbox.com/s/5xzjuw2doii5dqg/accidentes_barcelona.csv?dl=0", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+
+accidentes<- read.csv("haccidentes_barcelona.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 
 # Se seleccionan las columnas que interesan del dataset:
 coords <-  select(accidentes, Coordenada_UTM_X, Coordenada_UTM_Y)
@@ -27,7 +29,7 @@ coords <-  select(accidentes, Coordenada_UTM_X, Coordenada_UTM_Y)
 
 #### ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Las coordenadas UTM se importan como characters, para poderlas convertir en tipo numeric había que sustituir la "," por un ".", estuve probando diferentes
-# formas que encontré pero ninguna conseguiía darme un resultado óptimo, por lo que al final por desesperación he acabado recurriendo a hacer los cambios directamente
+# formas que encontré pero ninguna conseguía darme un resultado óptimo, por lo que al final por desesperación he acabado recurriendo a hacer los cambios directamente
 # desde el Bloc de notas de Windows. He dejado sólo una parte del código de algunos métodos que he intentado sin éxito. 
 
 X <- tail(coords, -2) # Se eliminan las 2 primeras filas que tienen valor "-1" 
@@ -48,14 +50,15 @@ options(digits = 9) # Para mostrar correctamente todos los decimales de las coor
 # pero ha resultado ser el método más efectivo para conseguir esa sencilla tarea sin que diera errores a posteriori.
 # Este archivo no se puede importar directamente desde Dropbox ya que da error al importarlo con read.csv2.
 
-coords<- read.csv2("/Users/emi/Documents/Documentos/Data_Science/K_School/TFM/TFM_v3/coordenadas.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
+coords<- read.csv2("coordenadas.csv", header = TRUE, sep = ";", stringsAsFactors = FALSE)
 coords <- as.data.frame(sapply(coords, as.numeric))
 
 
 
-# Se elimina la fila con NAs ya que al tratarse de 50102 datos de  coordenadas de accidentes, eliminar un valor no será representativo para el resultado final y 
-# tampoco tendría sentido sustituir dichos NAs por un valor medio de las coordenadas.
-sapply(coords, function(x) sum(is.na(x))) # Se detecta que hay una fila que tiene valor NA
+# Se detecta que hay una fila que tiene valor NA
+# Se elimina la fila con NAs ya que al tratarse de 50102 datos de  coordenadas de accidentes, eliminar un valor no será  
+# representativo para el resultado final y tampoco tendría sentido sustituir dichos NAs por un valor medio de las coordenadas.
+sapply(coords, function(x) sum(is.na(x))) 
 coords <- coords %>% drop_na()
 
 

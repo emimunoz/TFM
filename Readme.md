@@ -106,7 +106,7 @@ Aquí se confirma que claramente la inmensa mayoría de los accidentes se produc
 
 Es destacable que el sábado se alcance la cifra máxima de víctimas mortales junto con el lunes. Quizás es debido a que aunque haya bastantes menos accidentes que durante la semana, los accidentes que sucedan se dan en condiciones de más riesgo y por lo tanto acaban resultando en el fallecimiento de víctimas afectadas. 
 
-![](https://i.imgur.com/t3QINDS.png)
+![](https://i.imgur.com/HLzlsN6.png)
 
 ### Puntos calientes de accidentes en el mapa de Barcelona
 Finalmente, aquí se puede visualizar todos los accidentes sucedidos en los 5 años analizados en este proyecto (de 2014 a 2018). Como se ha visto previamente, la zona céntrica de Barcelona es la que más accidentes acumula, pero también se puede apreciar cómo en la carreteras que circunvalan la ciudad también aparece una acumulación de puntos de accidentes. 

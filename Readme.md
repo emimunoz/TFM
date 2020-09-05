@@ -8,8 +8,6 @@
 * **Visualization:** El archivo con los gráficos para visualizar los datos en Tableau.
 * **Map Visualization:** El archivo con la visualización de los puntos de accidentes en la ciudad de Barcelona. 
 
-* He intentado que todos los archivos necesarios para ejecutar el código se descarguen directamente desde Dropbox para facilitar el proceso de revisión del código. Pero he comprobado que el proceso de importación es inconsistente y a veces ha dado errores, por lo que en caso de que fallara, se pueden descargar todos los archivos necesarios desde este link -> https://www.dropbox.com/sh/wvzucdfnn5gihir/AAACX7QqEc7AGPbDlyA4upkCa?dl=0 
-
 ## La idea
 La idea inicial que me habría gustado desarrollar como Trabajo Final de Máster consistía en un estudio sobre la asistencia a las urgencias de diversos hospitales dependiendo del día y los eventos sociales de cada día. La finalidad era encontrar la más que sabida relación entre la saturación de las urgencias y días que no coinciden con festivos o eventos deportivos relevantes, ya que los días que hay eventos sociales de ese tipo, las urgencias están menos saturadas. 
 

@@ -5,8 +5,8 @@
 * **Preparación y limpieza de datos:** En este código se importan los datos directamente como se descargan desde la web Open Data del Ayuntamiento de Barcelona. Se realiza exploración y limpieza de los datos para prepararlos para usarlos en Tableau y para el forecasting.
 * **Coordenadas:** Para poder trabajar con los datos de coordenadas en Tableau, es necesario transformar las coordenadas que están en formato UTM a formato de latitud/longitud.
 * **Forecasting:** En este código se preparan los datos y se estudian las características de la serie temporal para realización de la predicción del número de accidentes utilizando los métodos: Auto.ARIMA, ETS, SNAIVE, Holt Winters y Prophet. 
-* **Visualization:** El archivo con los gráficos para visualizar los datos en Tableau.
-* **Map Visualization:** El archivo con la visualización de los puntos de accidentes en la ciudad de Barcelona. 
+* **Visualization:** El archivo de Tableau con los gráficos para visualizar los datos en Tableau.
+* **Map Visualization:** El archivo de Tableau con la visualización de los puntos de accidentes en la ciudad de Barcelona. 
 
 ## La idea
 La idea inicial que me habría gustado desarrollar como Trabajo Final de Máster consistía en un estudio sobre la asistencia a las urgencias de diversos hospitales dependiendo del día y los eventos sociales de cada día. La finalidad era encontrar la más que sabida relación entre la saturación de las urgencias y días que no coinciden con festivos o eventos deportivos relevantes, ya que los días que hay eventos sociales de ese tipo, las urgencias están menos saturadas. 

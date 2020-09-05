@@ -22,7 +22,9 @@ Los [datos](https://opendata-ajuntament.barcelona.cat/data/es/dataset/accidents-
 
 Los cambios que he realizado en el dataset ha sido retirar columnas que no iba a utilizar, traducir los nombres de columnas y valores que estaban en catalán al español y la búsqueda de valores duplicados. 
 
-No hay muchos valores duplicados en el dataset, pero los pocos que hay, el motivo de estar duplicados es por la clasificación de la causa del accidente. En algunas ocasiones se indica como causa _“Otros”_ y otro dato con una causa más específica, por lo que me he quedado con los valores que ofrecen más información sobre la causa del accidente. Ya para finalizar con la preparación previa de los datos he creado una columna con la fecha en la que  sucedió cada accidente. Exportando al final el archivo _CSV_ con el que se trabajará después para realizar el Forecasting y para la visualización en Tableau.
+No hay muchos valores duplicados en el dataset, pero los pocos que hay, el motivo de estar duplicados es por la clasificación de la causa del accidente. En algunas ocasiones se indica como causa _“Otros”_ y otro dato con una causa más específica, por lo que me he quedado con los valores que ofrecen más información sobre la causa del accidente. 
+
+Ya para finalizar con la preparación previa de los datos he creado una columna con la fecha en la que  sucedió cada accidente. Exportando al final el archivo _CSV_ con el que se trabajará después para realizar el Forecasting y para la visualización en Tableau.
 
 ## Forecasting
 A raíz de los comentarios que recibí cuando presenté inicialmente mi Trabajo Final de Máster, he decidido introducir otros métodos de predicción más simples para comparar los resultados con los que se obtienen con Prophet. En concreto he utilizado Auto.ARIMA, ETS, SNAIVE y Holt Winters que he visto que son de los más populares a la hora de trabajar con series temporales.
